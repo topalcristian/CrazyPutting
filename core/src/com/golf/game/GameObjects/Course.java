@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.golf.game.Components.Colliders.BoxCollider;
 import com.golf.game.Components.Colliders.ColliderComponent;
 import com.golf.game.Components.Colliders.SphereCollider;
-import com.golf.game.Components.Graphics.BoxGraphics3DComponent;
-import com.golf.game.Components.Graphics.SphereGraphics3DComponent;
+import com.golf.game.Components.Graphics.BoxGraphicsComponent;
+import com.golf.game.Components.Graphics.SphereGraphicsComponent;
 import com.golf.game.GameLogic.CourseManager;
 import com.golf.game.Parser.ObstacleData;
 
@@ -246,13 +246,13 @@ public class Course {
                 case 1:
                     SphereCollider sphere = new SphereCollider(cacheData.position, cacheData.dimensions.x);
                     obj.addColliderComponent(sphere);
-                    SphereGraphics3DComponent graphSphere = new SphereGraphics3DComponent(cacheData.dimensions.x, Color.DARK_GRAY);
+                    SphereGraphicsComponent graphSphere = new SphereGraphicsComponent(cacheData.dimensions.x, Color.DARK_GRAY);
                     obj.addGraphicComponent(graphSphere);
                     break;
                 case 2:
                     BoxCollider box = new BoxCollider(cacheData.position, cacheData.dimensions);
                     obj.addColliderComponent(box);
-                    BoxGraphics3DComponent boxGraph = new BoxGraphics3DComponent(cacheData.dimensions, Color.DARK_GRAY);
+                    BoxGraphicsComponent boxGraph = new BoxGraphicsComponent(cacheData.dimensions, Color.DARK_GRAY);
                     obj.addGraphicComponent(boxGraph);
                     break;
             }

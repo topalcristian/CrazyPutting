@@ -22,7 +22,7 @@ public class TerrainGenerator {
 
     public static List<Vector3> triangleList = new ArrayList<Vector3>();
     static double[][] p;
-    private static Vector2 _terrainSize;
+
     private static BiCubicSpline _spline;
     private static Vector2 _dimensions;
 
@@ -49,7 +49,6 @@ public class TerrainGenerator {
         int startPosY = -totalMeshLength / 2;
         int verticesPerSide = 40; //Amount of vertices per side of mesh part
         float scaleVertex = 10;  //scale amount
-        _terrainSize = new Vector2(totalMeshLength * scaleVertex, totalMeshLength * scaleVertex);
         _dimensions = new Vector2(scaleVertex * totalMeshLength, scaleVertex * totalMeshLength);
         _spline = new BiCubicSpline(new Vector2(startPosX, startPosY), verticesPerSide, scaleVertex);
         ModelBuilder modelBuilder = new ModelBuilder();
@@ -127,9 +126,9 @@ public class TerrainGenerator {
                 MeshPartBuilder.VertexInfo v1 = new MeshPartBuilder.VertexInfo().setPos(posV1).setNor(normal1).setCol(Color.GREEN).setUV(0.5f, 0.0f);
                 MeshPartBuilder.VertexInfo v2 = new MeshPartBuilder.VertexInfo().setPos(posV2).setNor(normal1).setCol(Color.GREEN).setUV(0.5f, 0.0f);
                 MeshPartBuilder.VertexInfo v3 = new MeshPartBuilder.VertexInfo().setPos(posV3).setNor(normal1).setCol(Color.GREEN).setUV(0.5f, 0.0f);
-                MeshPartBuilder.VertexInfo v4 = new MeshPartBuilder.VertexInfo().setPos(posV4).setNor(normal2).setCol(Color.FOREST).setUV(0.5f, 0.0f);
-                MeshPartBuilder.VertexInfo v5 = new MeshPartBuilder.VertexInfo().setPos((posV2)).setNor(normal2).setCol(Color.FOREST).setUV(0.5f, 0.0f);
-                MeshPartBuilder.VertexInfo v6 = new MeshPartBuilder.VertexInfo().setPos((posV3)).setNor(normal2).setCol(Color.FOREST).setUV(0.5f, 0.0f);
+                MeshPartBuilder.VertexInfo v4 = new MeshPartBuilder.VertexInfo().setPos(posV4).setNor(normal2).setCol(Color.GREEN).setUV(0.5f, 0.0f);
+                MeshPartBuilder.VertexInfo v5 = new MeshPartBuilder.VertexInfo().setPos((posV2)).setNor(normal2).setCol(Color.GREEN).setUV(0.5f, 0.0f);
+                MeshPartBuilder.VertexInfo v6 = new MeshPartBuilder.VertexInfo().setPos((posV3)).setNor(normal2).setCol(Color.GREEN).setUV(0.5f, 0.0f);
                 checkUnderWaterVertex(v1);
                 checkUnderWaterVertex(v2);
                 checkUnderWaterVertex(v3);

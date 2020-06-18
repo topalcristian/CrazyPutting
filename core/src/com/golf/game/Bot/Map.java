@@ -134,7 +134,6 @@ public class Map<T extends AbstractNode> {
     }
 
     private List<T> calcPath(T start, T goal) {
-        // TODO if invalid nodes are given (eg cannot find from goal to start, this method will result in an infinite loop!)
         float dX, dY;
         T curr = goal;
         boolean done = false;

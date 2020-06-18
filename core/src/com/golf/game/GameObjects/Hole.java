@@ -10,10 +10,6 @@ public class Hole extends GameObject {
         setPosition(position);
     }
 
-    public Hole(int radius) {
-        this.radius = radius;
-    }
-
     public void setPosition(Vector3 position) {
         _position = new Vector3(position);
     }

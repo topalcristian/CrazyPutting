@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.golf.game.Bot.*;
 import com.golf.game.Components.Colliders.CollisionManager;
 import com.golf.game.Components.Colliders.SphereCollider;
-import com.golf.game.Components.Graphics.SphereGraphics3DComponent;
+import com.golf.game.Components.Graphics.SphereGraphicsComponent;
 import com.golf.game.GameObjects.Ball;
 import com.golf.game.GameObjects.Hole;
 import com.golf.game.Others.InputData;
@@ -26,7 +26,6 @@ public class GameManager {
     private Ball _ball;
     private Hole _hole;
     private GolfGame _game;
-    //    private Bot bot;
     private int _turns;
     private int _mode;
 
@@ -36,7 +35,7 @@ public class GameManager {
     private float[][] allInput;
 
     private ArrayList<Velocity> mazeVelocities = new ArrayList<Velocity>();
-    private int _player;
+
 
     public GameManager(GolfGame pGame, int pMode) {
         _mode = pMode;
@@ -64,14 +63,14 @@ public class GameManager {
         Ball = new Ball((CourseManager.getStartPosition(0)));
         Hole = new Hole((int) CourseManager.getActiveCourse().getGoalRadius(), (CourseManager.getGoalStartPosition(0)));
 
-        int radius = 40;
-        Ball.addGraphicComponent(new SphereGraphics3DComponent(radius, Color.WHITE));
-        SphereCollider sphere = new SphereCollider(CourseManager.getStartPosition(0), 20);
+        int radius = 20;
+        Ball.addGraphicComponent(new SphereGraphicsComponent(radius, Color.WHITE));
+        SphereCollider sphere = new SphereCollider(CourseManager.getStartPosition(0), 10);
         Ball.addColliderComponent(sphere);
-        Hole.addGraphicComponent(new SphereGraphics3DComponent(radius * 2.0f, Color.BLACK));
+        Hole.addGraphicComponent(new SphereGraphicsComponent(radius * 2.0f, Color.BLACK));
         _ball = Ball;
         _hole = Hole;
-        _player = 0;
+
     }
 
     /*
@@ -182,7 +181,6 @@ public class GameManager {
     }
 
     public void chooseMazeBot() {
-        // TODO
         allowedOffset = 30;
         int startX = Math.round(CourseManager.getStartPosition(0).x);
         int startY = Math.round(CourseManager.getStartPosition(0).y);
@@ -275,26 +273,23 @@ public class GameManager {
     }
 
 
-    public void updateBallPos(Vector3 pos, int pPlayer) {
-
-        Vector3 cache = Ball.getPosition();
+    public void updateBallPos(Vector3 pos) {
         Ball.setPosition(pos);
 
     }
 
+    public boolean BallIsMoving() {
 
-    public void updateHolePos(Vector3 pos, int pPlayer) {
-        Vector3 cache = Hole.getPosition();
+        return Ball.isMoving();
+    }
+
+    public void updateHolePos(Vector3 pos) {
         Hole.setPosition(pos);
-
     }
 
     public int getMode() {
         return _mode;
     }
 
-    public int getActivePlayerIndex() {
-        return _player;
-    }
 
 }

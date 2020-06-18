@@ -38,7 +38,7 @@ public class ChooseCoursesScreen implements Screen {
     private Label radiusValue;
     private Label maxVelocityValue;
     private TextButton confirmButton;
-    private Label splines;
+
     private SpriteBatch batch;
     private Sprite sprite;
     private Table table;
@@ -89,8 +89,7 @@ public class ChooseCoursesScreen implements Screen {
 
 
         Label courseProperties = new Label("Course properties:", skin);
-        Label heightLabel = new Label("Height function", skin);
-        heightLabel = new Label("Spline Mode", skin);
+        Label heightLabel = new Label("Spline Mode", skin);
         Label frictionLabel = new Label("Friction coefficient", skin);
         Label startLabel = new Label("Start position", skin);
         Label goalLabel = new Label("Goal position", skin);
@@ -106,8 +105,7 @@ public class ChooseCoursesScreen implements Screen {
         radiusValue = new Label(selectBox.getSelected(), skin);
         maxVelocityValue = new Label(selectBox.getSelected(), skin);
 
-        splines = new Label("Spline info", skin);
-        Label splineText = new Label("Spline Points Height", skin);
+
         TextButton createCourseButton = new TextButton("Create course", skin);
         createCourseButton.addListener(new ClickListener() {
 
@@ -118,9 +116,6 @@ public class ChooseCoursesScreen implements Screen {
         });
 
 
-        /*
-            Add previously initialized labels to a table.
-         */
         updateCourseInfo();
         table = new Table();
 
@@ -150,9 +145,6 @@ public class ChooseCoursesScreen implements Screen {
         table.row();
         table.add(createCourseButton).align(Align.left);
 
-            table.row();
-            table.add(splineText).align(Align.left);
-            table.add(splines).align(Align.left);
 
         /*
             Add confirmation button.
@@ -199,7 +191,7 @@ public class ChooseCoursesScreen implements Screen {
         goalValue.setText(CourseManager.getCourseWithIndex(selectBox.getSelectedIndex()).getGoalPosition(0).toString());
         radiusValue.setText(CourseManager.getCourseWithIndex(selectBox.getSelectedIndex()).getGoalRadius() + "");
         maxVelocityValue.setText(CourseManager.getCourseWithIndex(selectBox.getSelectedIndex()).getMaxSpeed() + "");
-        splines.setText(CourseManager.getCourseWithIndex(selectBox.getSelectedIndex()).toStringSplinePointsMatrix());
+
 
     }
 
@@ -223,7 +215,7 @@ public class ChooseCoursesScreen implements Screen {
             CourseManager.reParseHeightFormula(selectBox.getSelectedIndex());
 
         Gdx.app.getApplicationListener().dispose();
-        game.setScreen(new GameScreen3D(game, _mode));
+        game.setScreen(new GameScreen(game, _mode));
 
     }
 

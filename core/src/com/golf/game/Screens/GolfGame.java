@@ -27,9 +27,10 @@ public class GolfGame extends Game {
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         input = new InputData();
         this.setScreen(new MenuScreen(this));
-        //3D
         environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2251f, 0.4f, 0.72f, 0.1f));
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.6f, 0.6f, 0.7f, 1f));
+
+        //environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2251f, 0.4f, 0.72f, 0.1f));
         environment.add(new DirectionalLight().set(0.2251f, 0.4f, 0.072f, -.3f, -.3f, -.2f));
         batch3D = new ModelBatch();
         GraphicsManager.set3DEnvironment(environment);

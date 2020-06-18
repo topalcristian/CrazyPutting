@@ -8,20 +8,14 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.golf.game.GameLogic.GraphicsManager;
 
-public class SphereGraphics3DComponent extends Graphics3DComponent {
+public class SphereGraphicsComponent extends GraphicsComponent {
 
     private float _width;
     private float _deep;
     private float _height;
 
-    public SphereGraphics3DComponent(float pRadius) {
-        _width = pRadius;
-        _deep = pRadius;
-        _height = pRadius;
-        initSphere();
-    }
 
-    public SphereGraphics3DComponent(float pRadius, Color pColor) {
+    public SphereGraphicsComponent(float pRadius, Color pColor) {
         _color = pColor;
         _width = pRadius;
         _deep = pRadius;
@@ -29,13 +23,6 @@ public class SphereGraphics3DComponent extends Graphics3DComponent {
         initSphere();
     }
 
-    public SphereGraphics3DComponent(float pWidth, float pDeep, float pHeight, Color pColor) {
-        _color = pColor;
-        _width = pWidth;
-        _deep = pDeep;
-        _height = pHeight;
-        initSphere();
-    }
 
     private void initSphere() {
         GraphicsManager.addGraphics3DComponent(this);

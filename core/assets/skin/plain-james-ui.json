@@ -1,10 +1,10 @@
 {
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     font: {
-      file: font-export.fnt
+      file: white16.fnt
     }
     title: {
-      file: font-title-export.fnt
+      file: white16.fnt
     }
   }
   com.badlogic.gdx.graphics.Color: {
@@ -21,9 +21,9 @@
       a: 1
     }
     white: {
-      r: 1
-      g: 1
-      b: 1
+      r: 238
+      g: 130
+      b: 238
       a: 1
     }
   }
@@ -76,12 +76,12 @@
   }
   com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
     default: {
-      up: round-gray
+      up: white,
       down: round-dark-gray
       over: round-light-gray
     }
     toggle: {
-      up: round-gray
+      up: white,
       down: round-dark-gray
       over: round-light-gray
       checked: round-dark-gray
@@ -98,12 +98,12 @@
   }
   com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
     default: {
-      up: round-gray
+      up: white,
       down: round-dark-gray
       over: round-light-gray
     }
     toggle: {
-      up: round-gray
+      up: white,
       down: round-dark-gray
       over: round-light-gray
       checked: round-dark-gray
@@ -112,14 +112,14 @@
   }
   com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
     default: {
-      font: font
-      up: round-gray
+      font: font,
+      up: white,
       down: round-dark-gray
       over: round-light-gray
     }
     toggle: {
-      font: font
-      fontColor: black
+      font: font,
+      fontColor: white,
       up: round-gray
       down: round-dark-gray
       over: round-light-gray
@@ -129,12 +129,12 @@
   }
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     default: {
-      font: font
-      fontColor: black
+      font: font,
+      fontColor: white
     }
     title: {
-      font: title
-      fontColor: black
+      font: title,
+      fontColor: white
     }
   }
   com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
@@ -166,8 +166,8 @@
   }
   com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
     default: {
-      font: font
-      fontColor: black
+      font: font,
+      fontColor: white,
       scrollStyle: default
       listStyle: default
     }
@@ -192,15 +192,15 @@
   }
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
-      font: font
-      fontColor: black
+      font: font,
+      fontColor: white,
       up: round-gray
       down: round-dark-gray
       over: round-light-gray
     }
     toggle: {
-      font: font
-      fontColor: black
+      font: font,
+      fontColor: white,
       up: round-gray
       down: round-dark-gray
       over: round-light-gray
@@ -208,8 +208,8 @@
       checkedOver: round-light-gray
     }
     special: {
-      font: title
-      fontColor: black
+      font: title,
+      fontColor: white,
       up: round-gray
       down: round-dark-gray
       over: round-light-gray
@@ -217,8 +217,8 @@
   }
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
     default: {
-      font: font
-      fontColor: white
+      font: font,
+      fontColor: white,
       background: textfield
       cursor: cursor
       selection: gray

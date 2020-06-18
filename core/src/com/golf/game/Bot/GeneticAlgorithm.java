@@ -32,7 +32,6 @@ public class GeneticAlgorithm extends SuperBot {
         super(hole, course, initial_position);
         Gdx.app.log("Log", "Genetic started");
 
-        // TODO decreaded population size and generations
         this.rand = new Random();
         this.allBalls = new ArrayList<Ball>();
         this.firstIteration = new ArrayList<Ball>();
@@ -102,7 +101,6 @@ public class GeneticAlgorithm extends SuperBot {
             if (allBalls.get(0).getFitnessValue() == 0) {
                 System.out.println("Success");
                 setEndPosition(allBalls.get(0).getEndPosition());
-                //WATCH OUT
                 for (int j = 1; j < allBalls.size(); j++) {
                     allBalls.get(j).destroy();
                 }

@@ -25,7 +25,7 @@ public class SplineInfo {
         return _rect;
     }
 
-    private void createRectangle(SplineInfo spline) {//TODO> clean, erase parameter since now the method is in the itself and not in bicubic we dont need to retreive data
+    private void createRectangle(SplineInfo spline) {
         Vector2 start = spline.getStartPos();
         Vector2 dimensions = spline.getDimensions();
         _rect = new Rectangle(start.x, start.y, dimensions.x, dimensions.y);

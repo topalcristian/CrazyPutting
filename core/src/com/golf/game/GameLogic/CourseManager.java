@@ -21,7 +21,8 @@ public class CourseManager {
     private static Vector2 dimensions = new Vector2(2000, 2000);
 
     public static int getCourseAmount() {
-        System.out.println(courseList.size());
+
+
         amountCourse = courseList.size();
         return amountCourse;
     }
@@ -73,7 +74,7 @@ public class CourseManager {
     }
 
     public static void reWriteCourse() {
-        if (cacheFileName == null) return; //If we havent cache a filename then we should not proceed
+        if (cacheFileName == null) return;
         Parser.writeCourseList(cacheFileName, courseList);
     }
 

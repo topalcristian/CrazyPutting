@@ -9,11 +9,11 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.golf.game.GameLogic.GraphicsManager;
 
-public class BoxGraphics3DComponent extends Graphics3DComponent {
+public class BoxGraphicsComponent extends GraphicsComponent {
     private Vector3 _dimensions;
 
 
-    public BoxGraphics3DComponent(Vector3 pDimensions, Color pColor) {
+    public BoxGraphicsComponent(Vector3 pDimensions, Color pColor) {
         _color = pColor;
         _dimensions = pDimensions;
         initBox();

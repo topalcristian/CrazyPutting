@@ -11,10 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.golf.game.Components.Graphics.Graphics3DComponent;
+import com.golf.game.Components.Graphics.GraphicsComponent;
 import com.golf.game.GameLogic.CourseManager;
 import com.golf.game.GameLogic.GameManager;
-import com.golf.game.Screens.GameScreen3D;
+import com.golf.game.Screens.GameScreen;
 import com.golf.game.Screens.GolfGame;
 
 public class GUI extends GameObject {
@@ -62,7 +62,7 @@ TODO: Use stage and the view part created in gamescreen3D to create an input lis
         else
             view = viewPort;
         UIStage = new Stage(viewPort, _game.batch);
-        UIStage.getViewport().setScreenBounds(GameScreen3D.Width3DScreen, 0, GameScreen3D.Width2DScreen - 1, GameScreen3D.Height2DScreen - 1);
+        UIStage.getViewport().setScreenBounds(GameScreen.Width3DScreen, 0, GameScreen.Width2DScreen - 1, GameScreen.Height2DScreen - 1);
         UIStage.getViewport().apply();
         UIStage.setDebugAll(false);
         _gameManager = pGameManager;
@@ -111,14 +111,8 @@ TODO: Use stage and the view part created in gamescreen3D to create an input lis
         _deepObstacleLabel = new Label("Deep: 80", skin);
         _heightObstacle.setValue(80);
         _heightObstacleLabel = new Label("Height: 80", skin);
-
-
-
-
-
         _keepRatio = new CheckBox("Same Dimensions", skin);
         _keepRatio.setChecked(true);
-
         _widthObstacle.setVisible(true);
         turnCount = new Label("Turns: " + _gameManager.getTurns(), skin);
         maxSpeed = new Label("Max speed: " + CourseManager.getMaxSpeed() + "\n", skin);
@@ -129,11 +123,9 @@ TODO: Use stage and the view part created in gamescreen3D to create an input lis
             controls = new Label("Controls: \nInput velocity with the \nmouse or  press I", skin);
         }
         ButtonGroup buttonGroup = new ButtonGroup(_splineEdit, _changeBallPos, _changeHolePos, _addObjects, _eraseObject);
-        //next set the max and min amount to be checked
         buttonGroup.setMaxCheckCount(1);
         buttonGroup.setMinCheckCount(0);
         buttonGroup.uncheckAll();
-        //  table.top();
         table.setDebug(false);
         table.add(maxSpeed).colspan(2);
         table.row();
@@ -146,42 +138,40 @@ TODO: Use stage and the view part created in gamescreen3D to create an input lis
         table.add(simulationCounter).colspan(2);
         table.row();
         table.add(controls).colspan(2);
-
-            table.row();
-            table.add(saveSplines).colspan(2);
-            table.row();
-            table.add(_splineEdit).colspan(2);
-            table.row();
-            table.add(_changeBallPos).colspan(2);
-            table.row();
-            table.add(_changeHolePos).colspan(2);
-            table.row();
-            table.add(_addObjects).colspan(2);
-            table.row();
-            table.add(_eraseObject).colspan(2);
-            table.row();
-            table.add(obstacleDim).colspan(2);
-            table.row();
-            table.add(_keepRatio).colspan(2);
-            table.row();
-            table.add(_widthObstacleLabel).align(Align.right);
-            table.add(_widthObstacle).align(Align.left);
-            table.row();
-            table.add(_deepObstacleLabel).align(Align.right);
-            table.add(_deepObstacle).align(Align.left);
-            table.row();
-            table.add(_heightObstacleLabel).align(Align.right);
-            table.add(_heightObstacle).align(Align.left);
-
+        table.row();
+        table.add(saveSplines).colspan(2);
+        table.row();
+        table.add(_splineEdit).colspan(2);
+        table.row();
+        table.add(_changeBallPos).colspan(2);
+        table.row();
+        table.add(_changeHolePos).colspan(2);
+        table.row();
+        table.add(_addObjects).colspan(2);
+        table.row();
+        table.add(_eraseObject).colspan(2);
+        table.row();
+        table.add(obstacleDim).colspan(2);
+        table.row();
+        table.add(_keepRatio).colspan(2);
+        table.row();
+        table.add(_widthObstacleLabel).align(Align.right);
+        table.add(_widthObstacle).align(Align.left);
+        table.row();
+        table.add(_deepObstacleLabel).align(Align.right);
+        table.add(_deepObstacle).align(Align.left);
+        table.row();
+        table.add(_heightObstacleLabel).align(Align.right);
+        table.add(_heightObstacle).align(Align.left);
         UIStage.addActor(table);
 
     }
 
     private void updatePlayerActive() {
-        Graphics3DComponent graphBall = (Graphics3DComponent) _activaBall.getGraphicComponent();
+        GraphicsComponent graphBall = _activaBall.getGraphicComponent();
         graphBall.setColor(Color.WHITE);
         _activaBall = _gameManager.getPlayer();
-        Graphics3DComponent graphBall2 = (Graphics3DComponent) _activaBall.getGraphicComponent();
+        GraphicsComponent graphBall2 = _activaBall.getGraphicComponent();
         graphBall2.setColor(Color.PURPLE);
     }
 

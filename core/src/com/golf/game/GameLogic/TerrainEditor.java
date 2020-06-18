@@ -12,9 +12,9 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.golf.game.Components.Colliders.BoxCollider;
 import com.golf.game.Components.Colliders.ColliderComponent;
 import com.golf.game.Components.Colliders.CollisionManager;
-import com.golf.game.Components.Graphics.BoxGraphics3DComponent;
-import com.golf.game.Components.Graphics.CustomGraphics3DComponent;
-import com.golf.game.Components.Graphics.Graphics3DComponent;
+import com.golf.game.Components.Graphics.BoxGraphicsComponent;
+import com.golf.game.Components.Graphics.CustomGraphicsComponent;
+import com.golf.game.Components.Graphics.GraphicsComponent;
 import com.golf.game.GameLogic.Splines.BiCubicSpline;
 import com.golf.game.GameLogic.Splines.SplineInfo;
 import com.golf.game.GameObjects.GUI;
@@ -53,7 +53,7 @@ public class TerrainEditor extends InputAdapter {
         _splineEnabled = pSplines;
         _cam3D = pCam3D;
         GameObject terrain = new GameObject();
-        Graphics3DComponent terrainGraphics = initTerrain();
+        GraphicsComponent terrainGraphics = initTerrain();
         terrain.addGraphicComponent(terrainGraphics);
         _terrainInstance = terrainGraphics.getInstance();
     }
@@ -69,16 +69,15 @@ public class TerrainEditor extends InputAdapter {
     }
 
 
-
-    private Graphics3DComponent initTerrain() {
-        Graphics3DComponent terrainGraphics;
+    private GraphicsComponent initTerrain() {
+        GraphicsComponent terrainGraphics;
         if (_splineEnabled) {
-            terrainGraphics = new CustomGraphics3DComponent(TerrainGenerator.generateModelTerrain(true, p));
+            terrainGraphics = new CustomGraphicsComponent(TerrainGenerator.generateModelTerrain(true, p));
             BiCubicSpline spline = TerrainGenerator.getSpline();
             _splinePoints = spline.getSplinePoints();
             CourseManager.setBiCubicSpline(spline);//change CourseManager to use splines instead of formula height
         } else {
-            terrainGraphics = new CustomGraphics3DComponent(TerrainGenerator.generateModelTerrain());
+            terrainGraphics = new CustomGraphicsComponent(TerrainGenerator.generateModelTerrain());
         }
         return terrainGraphics;
     }
@@ -114,7 +113,7 @@ public class TerrainEditor extends InputAdapter {
             _draggingPoint = intersectSplinePoint(screenX, screenY);
             _buttonDownCoord.set(screenX, screenY);
             if (_draggingPoint != null) {
-                Graphics3DComponent gp = (Graphics3DComponent) _draggingPoint.getGraphicComponent();
+                GraphicsComponent gp = _draggingPoint.getGraphicComponent();
                 gp.setColor(Color.FIREBRICK);
                 return true;
             }
@@ -123,7 +122,7 @@ public class TerrainEditor extends InputAdapter {
     }
 
     private boolean touchDownLogicMovedToTouchUp(int screenX, int screenY, int pointer, int button) {
-        // System.out.println("Object");
+
         if (_changeBall) {
             Vector3 pos = getObject(screenX, screenY);
             changeBallPos(pos);
@@ -147,7 +146,7 @@ public class TerrainEditor extends InputAdapter {
         Vector3 cachePos = new Vector3(pPos);
         pPos.y = cachePos.z;
         pPos.z = cachePos.y;
-        _observer.updateBallPos(pPos, _gui.getActiveBall());
+        _observer.updateBallPos(pPos);
     }
 
     private void changeHolePos(Vector3 pPos) {
@@ -155,7 +154,7 @@ public class TerrainEditor extends InputAdapter {
         Vector3 cachePos = new Vector3(pPos);
         pPos.y = cachePos.z;
         pPos.z = cachePos.y;
-        _observer.updateHolePos(pPos, _gui.getActiveBall());
+        _observer.updateHolePos(pPos);
     }
 
     private void addBox(Vector3 pPos) {
@@ -165,12 +164,11 @@ public class TerrainEditor extends InputAdapter {
         pPos.z = cachePos.y;
         GameObject obstacle = new GameObject(pPos);
         Vector3 dim = _gui.getObstacleDimensions();
-        obstacle.addGraphicComponent(new BoxGraphics3DComponent(dim, Color.DARK_GRAY));
+        obstacle.addGraphicComponent(new BoxGraphicsComponent(dim, Color.DARK_GRAY));
         BoxCollider box = new BoxCollider(pPos, new Vector3(_gui.getObstacleDimensions()));
         obstacle.addColliderComponent(box);
         CourseManager.addObstacle(obstacle);
 
-        //  obstacle.addColliderComponent(ColliderComponent);
     }
 
     private void eraseObject(int screenX, int screenY) {
@@ -266,12 +264,10 @@ public class TerrainEditor extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        // System.out.println("UP");
-        //Gdx.input.setInputProcessor(this); debug line
         touchDownLogicMovedToTouchUp(screenX, screenY, pointer, button);
         if (_splineEdit == false) return false;
         if (_dragging) {
-            Graphics3DComponent gp = (Graphics3DComponent) _draggingPoint.getGraphicComponent();
+            GraphicsComponent gp = _draggingPoint.getGraphicComponent();
             System.out.println(_draggingPoint.getPosition());
             gp.setColor(Color.RED);
             _observer.updateObjectPos();
@@ -304,7 +300,6 @@ public class TerrainEditor extends InputAdapter {
     public void dispose() {
         _terrainInstance = null;
         _draggingPoint = null;
-        // _terrainInstance.model.dispose();
         _cam3D = null;
         _gui = null;
         _observer = null;

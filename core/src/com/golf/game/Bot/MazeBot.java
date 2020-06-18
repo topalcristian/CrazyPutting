@@ -3,8 +3,8 @@ package com.golf.game.Bot;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
-import com.golf.game.Components.Graphics.Graphics3DComponent;
-import com.golf.game.Components.Graphics.SphereGraphics3DComponent;
+import com.golf.game.Components.Graphics.GraphicsComponent;
+import com.golf.game.Components.Graphics.SphereGraphicsComponent;
 import com.golf.game.GameLogic.CourseManager;
 import com.golf.game.GameLogic.GameManager;
 import com.golf.game.GameObjects.Ball;
@@ -135,7 +135,7 @@ public class MazeBot {
         for (int i = 0; i < intermediatePoints.size() - 1; i++) {
             SplinePoint point = new SplinePoint(new Vector3(intermediatePoints.get(i)));
             point.enabled = true;
-            Graphics3DComponent pointGraphics = new SphereGraphics3DComponent(40, Color.YELLOW);
+            GraphicsComponent pointGraphics = new SphereGraphicsComponent(40, Color.YELLOW);
             point.addGraphicComponent(pointGraphics);
         }
     }
