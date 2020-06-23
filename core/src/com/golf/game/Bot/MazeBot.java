@@ -26,17 +26,12 @@ public class MazeBot {
     private boolean _simple = false;
 
     public MazeBot(Ball ball, Hole hole, Course course, ArrayList<Node> path, Map<Node> map) {
-        // 1. get intermediate points and tolerance (radius of intermediate points)
-        // 2. change GA to make it work not between ball and hole, but between one point and another
+
         this.ball = ball;
         this.hole = hole;
         this.course = course;
         this.map = map;
-        //Find path between StartNode and GoalNode
-        /*
-            We only wanted the path to compute the nodes for bigger offset, but GA and real game shouldn't have any offset,
-            thus
-         */
+
         GameManager.allowedOffset = 0;
         intermediatePoints = new ArrayList<Vector3>();
         for (int i = 0; i < path.size() - 1; i++) {
@@ -49,7 +44,6 @@ public class MazeBot {
         for (Node node : path) {
             intermediatePoints.add(new Vector3(node.getxCoordinate(), node.getyCoordinate(), 0));
         }
-        //  System.out.print(" (" + startX  + ", " + startY  + ") -> ");
         for (int i = 0; i < path.size(); i++) {
             if (i != path.size() - 1)
                 System.out.print("(" + path.get(i).getxCoordinate() + ", " + path.get(i).getyCoordinate() + ") -> ");

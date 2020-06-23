@@ -7,7 +7,7 @@ import com.golf.game.Others.Velocity;
 
 public abstract class ColliderComponent extends AComponent {
 
-    //
+
     protected Vector3 position;
     protected boolean isStatic;
     protected Vector3 dimensions;

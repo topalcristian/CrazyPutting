@@ -63,11 +63,10 @@ public abstract class SuperBot {
         b.setFitnessValue(distance);
         int amountCollisions = 0;
         int lastDistance = 0;
-        while (((!Physics.physics.isGoingToStop(b) && !b.isFixed() && counter > 0))) {//|| amountCollisions >0)){
-            // not sure if firstIteration needed
+        while (((!Physics.physics.isGoingToStop(b) && !b.isFixed() && counter > 0))) {
             counter--;
             if (b.isSlow()) {
-                distance = calcToHoleDistance(b);// + amountCollisions*1000;
+                distance = calcToHoleDistance(b);
                 if (distance < hole.getRadius() && (!_simple || amountCollisions < 2) || isFitForMaze(b)) {
                     b.setFitnessValue(0);
                     System.out.println("actual speed " + b.getVelocity().getSpeed());
@@ -101,7 +100,7 @@ public abstract class SuperBot {
             distance = calcToHoleDistance(b);
             if (_simple && amountCollisions > 0) distance = distance + amountCollisions * 6000;
 
-            if (distance < hole.getRadius() && (!_simple || amountCollisions < 2) || isFitForMaze(b)) {//||isFitForMaze(b)) {
+            if (distance < hole.getRadius() && (!_simple || amountCollisions < 2) || isFitForMaze(b)) {
                 System.out.println("Fir for maze" + isFitForMaze(b));
                 System.out.println(amountCollisions + "collisions");
                 b.setFitnessValue(0);
@@ -228,7 +227,6 @@ public abstract class SuperBot {
                     return;
                 }
             } else if (xr.getFitnessValue() >= x2.getFitnessValue()) {
-                // xc = x0 + rho*(x3-x0)
                 Ball xc = new Ball();
                 xc.setPosition(initial_Position);
                 xc.fix(false);
@@ -306,7 +304,7 @@ public abstract class SuperBot {
         System.out.println("Ball found" + balls.get(0).getVelocityGA().speed + " " + balls.get(0).getVelocityGA().angle);
         bestBall.setVelocity(balls.get(0).getVelocityGA().speed, balls.get(0).getVelocityGA().angle);
         bestBall.setVelocityGA(balls.get(0).getVelocityGA().speed, balls.get(0).getVelocityGA().angle);
-//        }
+
     }
 
     public boolean isSimplexStuck(ArrayList<Ball> balls) {

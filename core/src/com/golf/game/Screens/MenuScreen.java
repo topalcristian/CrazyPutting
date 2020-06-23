@@ -47,12 +47,12 @@ public class MenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        // background
+
         batch = golfGame.batch;
         sprite = new Sprite(new Texture(Gdx.files.internal("background.jpg")));
         sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // buttons
+
         soloButton = new TextButton("Player mode", skin);
         soloButton.addListener(new ClickListener() {
             @Override
@@ -79,7 +79,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 AI = true;
                 Gdx.app.getApplicationListener().dispose();
-                golfGame.setScreen(new ChooseCoursesScreen(golfGame, 3)); // go to "ModesScreen" screen
+                golfGame.setScreen(new ChooseCoursesScreen(golfGame, 3));
             }
         });
 
@@ -90,7 +90,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.getApplicationListener().dispose();
                 AI = false;
-                golfGame.setScreen(new CourseCreatorScreen(golfGame)); // go to "Course creator" screen
+                golfGame.setScreen(new CourseCreatorScreen(golfGame));
             }
         });
 
@@ -142,7 +142,7 @@ public class MenuScreen implements Screen {
         tablePhysics.add(buttonPhysicsH).size(100, 50);
         tablePhysics.add(buttonPhysicsRK).size(100, 50);
 
-        // table
+
         table = new Table();
         table.setWidth(stage.getWidth());
         table.align(Align.center | Align.top);

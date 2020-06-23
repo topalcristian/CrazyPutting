@@ -23,7 +23,7 @@ import com.golf.game.GameObjects.GameObject;
 import com.golf.game.GraphicsGenerator.TerrainGenerator;
 
 
-public class GameScreen extends InputAdapter implements Screen {
+public class Graphics extends InputAdapter implements Screen {
 
     public static int Width3DScreen;
     public static int Height3DScreen;
@@ -47,7 +47,7 @@ public class GameScreen extends InputAdapter implements Screen {
     private Vector3 dirShot;
     private boolean won = false;
 
-    public GameScreen(GolfGame pGame, int pMode) {
+    public Graphics(GolfGame pGame, int pMode) {
         this.game = pGame;
         initCameras();
         initTerrain();
@@ -219,7 +219,7 @@ public class GameScreen extends InputAdapter implements Screen {
 
             float[][] input = new float[1][2];
 
-            input[0][0] = speedCache;
+            input[0][0] = 10;
             input[0][1] = angle;
 
             gameManager.shootBallFromGameScreen3DInput(input);
@@ -235,10 +235,9 @@ public class GameScreen extends InputAdapter implements Screen {
         shootArrow.destroy();
         Vector3 playerPos = gameManager.getPlayer().getPosition();
         Vector3 currentPos = terrainEditor.getObject(screenX, screenY);
-        int radius = 40;
-        currentPos.y = playerPos.z + radius;
         ArrowGraphicsComponent g = new ArrowGraphicsComponent(new Vector3(playerPos), currentPos, Color.DARK_GRAY);
         shootArrow.addGraphicComponent(g);
+        System.out.println("reached");
         return false;
     }
 
@@ -262,7 +261,7 @@ public class GameScreen extends InputAdapter implements Screen {
 
         retrieveGUIState();
         camController.update();
-        gameManager.update(delta);//Logic
+        gameManager.update(delta);
         updateCamera();
 
         GraphicsManager.render3D(game.batch3D, cam3D);

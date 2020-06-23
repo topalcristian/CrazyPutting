@@ -215,7 +215,7 @@ public class ChooseCoursesScreen implements Screen {
             CourseManager.reParseHeightFormula(selectBox.getSelectedIndex());
 
         Gdx.app.getApplicationListener().dispose();
-        game.setScreen(new GameScreen(game, _mode));
+        game.setScreen(new Graphics(game, _mode));
 
     }
 

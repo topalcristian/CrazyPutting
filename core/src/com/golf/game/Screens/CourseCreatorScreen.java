@@ -43,7 +43,7 @@ public class CourseCreatorScreen implements Screen {
     public CourseCreatorScreen(GolfGame game) {
         CourseManager.loadFile("coursesSpline.txt");
 
-        CourseManager.initObstacles();//IMPORTANT or after creating a course all objects will be deleted
+        CourseManager.initObstacles();
 
         CourseCreatorScreen.game = game;
         stage = new Stage();
@@ -191,7 +191,7 @@ public class CourseCreatorScreen implements Screen {
 
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                    //System.out.println("Button clicked");
+
                     confirmButtonClicked();
                 }
             });

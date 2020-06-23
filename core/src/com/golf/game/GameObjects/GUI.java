@@ -14,8 +14,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.golf.game.Components.Graphics.GraphicsComponent;
 import com.golf.game.GameLogic.CourseManager;
 import com.golf.game.GameLogic.GameManager;
-import com.golf.game.Screens.GameScreen;
 import com.golf.game.Screens.GolfGame;
+import com.golf.game.Screens.Graphics;
 
 public class GUI extends GameObject {
 
@@ -60,7 +60,7 @@ public class GUI extends GameObject {
             view = viewPort;
         assert viewPort != null;
         UIStage = new Stage(viewPort, _game.batch);
-        UIStage.getViewport().setScreenBounds(GameScreen.Width3DScreen, 0, GameScreen.Width2DScreen - 1, GameScreen.Height2DScreen - 1);
+        UIStage.getViewport().setScreenBounds(Graphics.Width3DScreen, 0, Graphics.Width2DScreen - 1, Graphics.Height2DScreen - 1);
         UIStage.getViewport().apply();
         UIStage.setDebugAll(false);
         _gameManager = pGameManager;

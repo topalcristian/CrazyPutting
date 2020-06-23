@@ -11,7 +11,7 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = GraphicsManager.WINDOW_WIDTH;
         config.height = GraphicsManager.WINDOW_HEIGHT;
-        config.title = "Crazy putting";
+        config.title = "Crazy Putting!";
         new LwjglApplication(new GolfGame(), config);
     }
 

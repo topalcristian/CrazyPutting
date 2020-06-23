@@ -10,7 +10,7 @@ import com.golf.game.GameLogic.GraphicsManager;
 
 public class GameObject {
     public boolean enabled = true;
-    protected Vector3 _position = new Vector3();//= Vector3.Zero;
+    protected Vector3 _position = new Vector3();
     private GraphicsComponent _graphicComponent;
     private ColliderComponent _colliderComponent;
 

@@ -73,22 +73,16 @@ public class GeneticAlgorithm extends SuperBot {
         return dist;
     }
 
-    //main method for the algorithm
     public void run() {
 
-        //create 5xPopulationSize list
         randomizeBallInput();
         unFixFirstBalls();
 
-        //simulates for bigger list all the balls
         simulateFirstShots();
 
-        //sort them by their distance result
         Collections.sort(firstIteration);
 
-        //take only the best ones in our original population
         createPopulation();
-        //Gdx.app.debug("Debug","max iterations"+maxIterations);
         for (int i = 0; i < maxIterations; i++) {
             unFixAllTheBall();
 
@@ -119,7 +113,6 @@ public class GeneticAlgorithm extends SuperBot {
 
         }
         setEndPosition(allBalls.get(0).getEndPosition());
-        //printBestBall();
 
     }
 
@@ -169,8 +162,6 @@ public class GeneticAlgorithm extends SuperBot {
         children = new ArrayList<Ball>();
         chooseElite(eliteSize);
         for (int i = eliteSize; i < POPULATION_SIZE; i++) {
-
-            //first ball from the elites
             Ball father = allBalls.get((int) (Math.random() * eliteSize));
             Ball mother = allBalls.get((int) (Math.random() * eliteSize));
             reproduceLinearly(father, mother, i);
@@ -188,7 +179,6 @@ public class GeneticAlgorithm extends SuperBot {
         Ball iterativeBall = allBalls.get(i);
 
 
-        // Whole arithmetic recombination with random u
         double u = Math.random();
         iterativeBall.setVelocityGA((float) ((((1 - u) * speed1 + u * speed2)) / 1f), ((float) ((1 - u) * angle1 + u * angle2) / 1));
         iterativeBall.setVelocity((((float) ((1 - u) * speed1 + u * speed2)) / 1f), ((float) ((1 - u) * angle1 + u * angle2) / 1));

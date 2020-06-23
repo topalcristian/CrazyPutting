@@ -194,7 +194,7 @@ public class GameManager {
                     break;
                 case "ss":
                     PledgeBot pledgeBot = new PledgeBot(_ball, _hole, CourseManager.getActiveCourse(), path, nodeMap);
-                    pledgeBot.move();
+                    mazeVelocities = pledgeBot.move();
                     _ball.fix(false);
                     break;
                 default:

@@ -44,7 +44,6 @@ public class Velocity {
         return this.speed;
     }
 
-    //getters and setters for speed components
     public void setSpeed(float speed) {
         this.speed = speed;
         updateVelocityComponents();
