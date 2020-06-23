@@ -14,16 +14,16 @@ public class BoxGraphicsComponent extends GraphicsComponent {
 
 
     public BoxGraphicsComponent(Vector3 pDimensions, Color pColor) {
-        _color = pColor;
+        color = pColor;
         _dimensions = pDimensions;
         initBox();
     }
 
 
     private void initBox() {
-        GraphicsManager.addGraphics3DComponent(this);
+        GraphicsManager.addGraphicsComponent(this);
         ModelBuilder modelBuilder = new ModelBuilder();
-        _model = modelBuilder.createBox(_dimensions.x, _dimensions.z, _dimensions.y, new Material(ColorAttribute.createDiffuse(_color)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        _instance = new ModelInstance(_model);
+        model = modelBuilder.createBox(_dimensions.x, _dimensions.z, _dimensions.y, new Material(ColorAttribute.createDiffuse(color)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        instance = new ModelInstance(model);
     }
 }

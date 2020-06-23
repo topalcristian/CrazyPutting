@@ -3,10 +3,10 @@ package com.golf.game.Components.Colliders;
 import com.badlogic.gdx.math.Vector3;
 import com.golf.game.GameLogic.GameManager;
 
-public class BoxCollider extends ColliderComponent {
+public class BoxCollide extends ColliderComponent {
     private Vector3 halfSizes;
 
-    public BoxCollider(Vector3 pos, Vector3 dim) {
+    public BoxCollide(Vector3 pos, Vector3 dim) {
         this.position = pos;
         this.dimensions = new Vector3(dim);
         this.halfSizes = new Vector3(dim).scl(0.5f);

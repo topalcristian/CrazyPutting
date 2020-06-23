@@ -133,8 +133,6 @@ public class MenuScreen implements Screen {
         buttonGroupPhysics.setChecked("RK4");
 
 
-
-
         Table tablePhysics = new Table();
         tablePhysics.setWidth(stage.getWidth());
         tablePhysics.setPosition(400, Gdx.graphics.getHeight() - 200);

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class SplineInfo {
+public class Spliner {
     private double[][] coeff;
     private Vector2 _pos;
     private Vector2 _dimensions;
@@ -13,7 +13,7 @@ public class SplineInfo {
     private Node _node;
     private Rectangle _rect;
 
-    public SplineInfo(Vector2 posStart, Vector2 pDimensions, float pScale, Node pNode) {
+    public Spliner(Vector2 posStart, Vector2 pDimensions, float pScale, Node pNode) {
         _pos = posStart;
         _scale = pScale;
         _dimensions = pDimensions;
@@ -21,11 +21,11 @@ public class SplineInfo {
         createRectangle(this);
     }
 
-    public Rectangle getRec() {
+    public Rectangle getRectangle() {
         return _rect;
     }
 
-    private void createRectangle(SplineInfo spline) {
+    private void createRectangle(Spliner spline) {
         Vector2 start = spline.getStartPos();
         Vector2 dimensions = spline.getDimensions();
         _rect = new Rectangle(start.x, start.y, dimensions.x, dimensions.y);
@@ -42,7 +42,6 @@ public class SplineInfo {
     }
 
     public double[][] getCoeff() {
-        //  printArray(coeff);
         return coeff;
     }
 
@@ -72,19 +71,18 @@ public class SplineInfo {
     }
 
     private String printArray(int[][] array) {
-        String out = "\n";
-        for (int i = 0; i < array.length; i++) {
+        StringBuilder out = new StringBuilder("\n");
+        for (int[] ints : array) {
             for (int j = 0; j < array[0].length; j++) {
-                out += array[i][j] + "  ";
+                out.append(ints[j]).append("  ");
             }
-            out += "\n";
+            out.append("\n");
         }
-        return out;
+        return out.toString();
     }
 
     @Override
     public String toString() {
-        String out = "SplineInfo\n" + printArray(_pointsInGrid) + "\n Pos " + _pos;
-        return out;
+        return "SplineInfo\n" + printArray(_pointsInGrid) + "\n Pos " + _pos;
     }
 }

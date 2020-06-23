@@ -4,7 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.golf.game.Components.Colliders.CollisionManager;
-import com.golf.game.Components.Colliders.SphereCollider;
+import com.golf.game.Components.Colliders.SphereCollide;
 import com.golf.game.GameLogic.GameManager;
 import com.golf.game.GameObjects.Ball;
 import com.golf.game.GameObjects.Course;
@@ -21,7 +21,7 @@ public abstract class SuperBot {
     protected Hole hole;
     protected Course course;
     protected Vector3 initial_Position;
-    private final SphereCollider sp = new SphereCollider(initial_Position, 20);
+    private final SphereCollide sp = new SphereCollide(initial_Position, 20);
     protected Ball bestBall;
     private Vector3 endPosition;
     private boolean _simple = false;
@@ -68,7 +68,7 @@ public abstract class SuperBot {
             counter--;
             if (b.isSlow()) {
                 distance = calcToHoleDistance(b);// + amountCollisions*1000;
-                if ((distance < hole.getRadius() && (!_simple || (_simple && amountCollisions < 2))) || isFitForMaze(b)) {
+                if (distance < hole.getRadius() && (!_simple || amountCollisions < 2) || isFitForMaze(b)) {
                     b.setFitnessValue(0);
                     System.out.println("actual speed " + b.getVelocity().getSpeed());
                     System.out.println("End point speed and angle " + b.getVelocityGA().speed + " " + b.getVelocityGA().angle + " " + b.getPosition().x + " " + b.getPosition().y);
@@ -96,13 +96,12 @@ public abstract class SuperBot {
             b.setVelocity(b.getVelocityGA().speed, b.getVelocityGA().angle);
 
             b.deleteColliderComponent();
-            return;
         } else {
 
             distance = calcToHoleDistance(b);
             if (_simple && amountCollisions > 0) distance = distance + amountCollisions * 6000;
 
-            if ((distance < hole.getRadius() && (!_simple || (_simple && amountCollisions < 2))) || isFitForMaze(b)) {//||isFitForMaze(b)) {
+            if (distance < hole.getRadius() && (!_simple || amountCollisions < 2) || isFitForMaze(b)) {//||isFitForMaze(b)) {
                 System.out.println("Fir for maze" + isFitForMaze(b));
                 System.out.println(amountCollisions + "collisions");
                 b.setFitnessValue(0);
@@ -131,10 +130,9 @@ public abstract class SuperBot {
         return (int) Math.sqrt(xDist + yDist + zDist);
     }
 
-    // TODO everywhere where you create a new ball you need to add a collider to it
     public void startSimplex(ArrayList<Ball> initialBalls) {
         Gdx.app.log("Start", "Simplex");
-        ArrayList<Ball> balls = new ArrayList<Ball>();
+        ArrayList<Ball> balls = new ArrayList<>();
 
         Ball x1 = initialBalls.get(0).clone();
         Ball x2 = initialBalls.get(10).clone();
@@ -157,7 +155,6 @@ public abstract class SuperBot {
         simulateShot(x2);
         simulateShot(x3);
         balls.add(x1);
-        // TODO come back to previous position of updateBall
         balls.add(x2);
         balls.add(x3);
         System.out.println("b2 " + x2.getFitnessValue());
@@ -317,7 +314,6 @@ public abstract class SuperBot {
     }
 
     public void bruteForce(ArrayList<Ball> balls) {
-        // TODO make brutforce recursive and tak a signle ball as input
         float currentSpeed = balls.get(0).getVelocityGA().speed;
         float currentAngle = balls.get(0).getVelocityGA().angle;
         System.out.println("current " + currentSpeed + " " + currentAngle);

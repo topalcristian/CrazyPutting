@@ -1,13 +1,13 @@
 package com.golf.game.Components.Colliders;
 
 import com.badlogic.gdx.math.Vector3;
-import com.golf.game.Components.BaseComponent;
+import com.golf.game.Components.AComponent;
 import com.golf.game.GameObjects.PhysicsGameObject;
 import com.golf.game.Others.Velocity;
 
-public abstract class ColliderComponent extends BaseComponent {
+public abstract class ColliderComponent extends AComponent {
 
-//
+    //
     protected Vector3 position;
     protected boolean isStatic;
     protected Vector3 dimensions;
@@ -18,20 +18,20 @@ public abstract class ColliderComponent extends BaseComponent {
     }
 
     public void synchronize() {
-        if (_owner == null) {
+        if (owner == null) {
             System.out.println("owner is null");
         }
         if (position == null) {
             System.out.println("position is null");
         }
-        position = _owner.getPosition();
+        position = owner.getPosition();
 
 
     }
 
     public boolean isEnabled() {
-        if (_owner == null) return true;
-        else return _owner.enabled;
+        if (owner == null) return true;
+        else return owner.enabled;
     }
 
     public Vector3 getPosition() {
@@ -51,8 +51,8 @@ public abstract class ColliderComponent extends BaseComponent {
     }
 
     protected Velocity getVelocity() {
-        if (_owner instanceof PhysicsGameObject) {
-            PhysicsGameObject obj = (PhysicsGameObject) _owner;
+        if (owner instanceof PhysicsGameObject) {
+            PhysicsGameObject obj = (PhysicsGameObject) owner;
             return obj.getVelocity();
         } else {
             return Velocity.instance();
@@ -61,8 +61,8 @@ public abstract class ColliderComponent extends BaseComponent {
 
 
     protected float getInverseMass() {
-        if (_owner instanceof PhysicsGameObject) {
-            PhysicsGameObject obj = (PhysicsGameObject) _owner;
+        if (owner instanceof PhysicsGameObject) {
+            PhysicsGameObject obj = (PhysicsGameObject) owner;
             return obj.getInverseMass();
         }
         return 1.0f / 500;

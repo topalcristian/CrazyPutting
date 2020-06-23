@@ -16,22 +16,22 @@ public class ArrowGraphicsComponent extends GraphicsComponent {
     private int sizeScale = 200;
 
     public ArrowGraphicsComponent(Vector3 from, Vector3 to, Color pColor) {
-        _color = pColor;
+        color = pColor;
         _from = from;
         _to = to;
         initArrow();
     }
 
     private void initArrow() {
-        GraphicsManager.addGraphics3DComponent(this);
+        GraphicsManager.addGraphicsComponent(this);
         ModelBuilder modelBuilder = new ModelBuilder();
         swapYZ(_from);
         Vector3 v = new Vector3();
         System.out.println(v.x);
         _to.sub(_from);
         //
-        _model = modelBuilder.createArrow(_to.x, _to.y, _to.z, 0, 0, 0, 0.1f, 0.3f, 10, GL20.GL_TRIANGLES, new Material(ColorAttribute.createDiffuse(_color)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        _instance = new ModelInstance(_model);
+        model = modelBuilder.createArrow(_to.x, _to.y, _to.z, 0, 0, 0, 0.1f, 0.3f, 10, GL20.GL_TRIANGLES, new Material(ColorAttribute.createDiffuse(color)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        instance = new ModelInstance(model);
     }
 
     private void swapYZ(Vector3 v) {

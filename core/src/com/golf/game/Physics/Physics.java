@@ -5,6 +5,7 @@ import com.golf.game.GameLogic.CourseManager;
 import com.golf.game.GameObjects.PhysicsGameObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public abstract class Physics {
 
@@ -12,7 +13,7 @@ public abstract class Physics {
     protected static float mu;
     protected final float g = 9.806f;
     protected float EPSILON = 1;
-    protected ArrayList<PhysicsGameObject> movingObjects = new ArrayList<PhysicsGameObject>();
+    protected ArrayList<PhysicsGameObject> movingObjects = new ArrayList<>();
 
     protected State state = new State();
     float dt = 0.01666f;
@@ -57,8 +58,7 @@ public abstract class Physics {
     }
 
     public void addMovableObjectList(PhysicsGameObject[] obj) {
-        for (int i = 0; i < obj.length; i++)
-            movingObjects.add(obj[i]);
+        Collections.addAll(movingObjects, obj);
     }
 
     public void removeMovableObject(PhysicsGameObject obj) {
@@ -75,9 +75,9 @@ public abstract class Physics {
      */
 
     void dealCollision(PhysicsGameObject obj) {
-            obj.setPosition(CourseManager.getStartPosition(0));
-            obj.fix(true);
-            obj.setVelocity(0.00001f, 0.000001f);
+        obj.setPosition(CourseManager.getStartPosition(0));
+        obj.fix(true);
+        obj.setVelocity(0.00001f, 0.000001f);
     }
 
     public boolean collided(PhysicsGameObject obj) {

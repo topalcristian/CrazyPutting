@@ -18,9 +18,6 @@ import com.golf.game.Screens.GameScreen;
 import com.golf.game.Screens.GolfGame;
 
 public class GUI extends GameObject {
-/*
-TODO: Use stage and the view part created in gamescreen3D to create an input listener so the buttons work
- */
 
     Viewport view;
     private GolfGame _game;
@@ -61,6 +58,7 @@ TODO: Use stage and the view part created in gamescreen3D to create an input lis
             view = new FitViewport(10, 10);
         else
             view = viewPort;
+        assert viewPort != null;
         UIStage = new Stage(viewPort, _game.batch);
         UIStage.getViewport().setScreenBounds(GameScreen.Width3DScreen, 0, GameScreen.Width2DScreen - 1, GameScreen.Height2DScreen - 1);
         UIStage.getViewport().apply();
@@ -118,7 +116,7 @@ TODO: Use stage and the view part created in gamescreen3D to create an input lis
         maxSpeed = new Label("Max speed: " + CourseManager.getMaxSpeed() + "\n", skin);
         simulationCounter = new Label("Nr of simulations: " + GameManager.simulationCounter, skin);
         if (_gameManager.getMode() == 3) {
-            controls = new Label("Controls: \nG - simple GA \nS - shortest MazeBot \nA - advanced MazeBot", skin);
+            controls = new Label("Controls: \nG - simple GA \nS - shortest MazeBot \nA - advanced MazeBot\nX - PledgeBot\" ", skin);
         } else {
             controls = new Label("Controls: \nInput velocity with the \nmouse or  press I", skin);
         }
@@ -245,9 +243,6 @@ TODO: Use stage and the view part created in gamescreen3D to create an input lis
         return _addObjects.isChecked();
     }
 
-    public int getActiveBall() {
-        return 0;
-    }
 
     public boolean isEraseObjectsActive() {
         return _eraseObject.isChecked();

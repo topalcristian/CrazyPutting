@@ -2,9 +2,9 @@ package com.golf.game.GameObjects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
-import com.golf.game.Components.Colliders.BoxCollider;
+import com.golf.game.Components.Colliders.BoxCollide;
 import com.golf.game.Components.Colliders.ColliderComponent;
-import com.golf.game.Components.Colliders.SphereCollider;
+import com.golf.game.Components.Colliders.SphereCollide;
 import com.golf.game.Components.Graphics.BoxGraphicsComponent;
 import com.golf.game.Components.Graphics.SphereGraphicsComponent;
 import com.golf.game.GameLogic.CourseManager;
@@ -23,8 +23,8 @@ public class Course {
     private Vector3[] _startBall;
     private float _maxSpeed;
     private float[][] _splinePoints = new float[6][6];
-    private List<GameObject> _obstacles = new ArrayList<GameObject>();
-    private List<ObstacleData> cacheDataList = new ArrayList<ObstacleData>();
+    private List<GameObject> _obstacles = new ArrayList<>();
+    private List<ObstacleData> cacheDataList = new ArrayList<>();
 
     public Course() {
         _goalPosition = new Vector3[4];
@@ -109,25 +109,15 @@ public class Course {
     }
 
     public String toStringSplinePoints() {
-        String out = "" + _splinePoints.length + " " + _splinePoints[0].length + " ";
-        for (int i = 0; i < _splinePoints.length; i++) {
+        StringBuilder out = new StringBuilder("" + _splinePoints.length + " " + _splinePoints[0].length + " ");
+        for (float[] splinePoint : _splinePoints) {
             for (int j = 0; j < _splinePoints[0].length; j++) {
-                out += _splinePoints[i][j] + "  ";
+                out.append(splinePoint[j]).append("  ");
             }
         }
-        return out;
+        return out.toString();
     }
 
-    public String toStringSplinePointsMatrix() {
-        String out = "";
-        for (int i = 0; i < _splinePoints.length; i++) {
-            for (int j = 0; j < _splinePoints[0].length; j++) {
-                out += _splinePoints[i][j] + "  ";
-            }
-            out += "\n";
-        }
-        return out;
-    }
 
     public void addObstacleToList(GameObject pObstacle) {
         _obstacles.add(pObstacle);
@@ -136,11 +126,11 @@ public class Course {
     public boolean checkObstaclesAt(Vector3 pPosition) {
         for (GameObject obstacle : _obstacles) {
             ColliderComponent colliderComponent = obstacle.getColliderComponent();
-            if (colliderComponent instanceof SphereCollider) {
-                SphereCollider sphere = (SphereCollider) colliderComponent;
+            if (colliderComponent instanceof SphereCollide) {
+                SphereCollide sphere = (SphereCollide) colliderComponent;
                 if (sphere.containsPoint(pPosition)) return true;
-            } else if (colliderComponent instanceof BoxCollider) {
-                BoxCollider box = (BoxCollider) colliderComponent;
+            } else if (colliderComponent instanceof BoxCollide) {
+                BoxCollide box = (BoxCollide) colliderComponent;
                 if (box.containsPointPath(pPosition)) return true;
             }
         }
@@ -179,36 +169,36 @@ public class Course {
     }
 
     private String getObstaclesString() {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for (GameObject obstacle : _obstacles) {
             ColliderComponent colliderComponent = obstacle.getColliderComponent();
-            if (colliderComponent instanceof SphereCollider) {
-                SphereCollider sphere = (SphereCollider) colliderComponent;
-                out += "\nCollider type 1";
-                out += "\nPosition: " + obstacle.getPosition();
-                out += "\nDimensions: " + sphere.getDimensions();
-            } else if (colliderComponent instanceof BoxCollider) {
-                BoxCollider box = (BoxCollider) colliderComponent;
-                out += "\nCollider type 2";
-                out += "\nPosition: " + obstacle.getPosition();
-                out += "\nDimensions: " + box.getDimensions();
+            if (colliderComponent instanceof SphereCollide) {
+                SphereCollide sphere = (SphereCollide) colliderComponent;
+                out.append("\nCollider type 1");
+                out.append("\nPosition: ").append(obstacle.getPosition());
+                out.append("\nDimensions: ").append(sphere.getDimensions());
+            } else if (colliderComponent instanceof BoxCollide) {
+                BoxCollide box = (BoxCollide) colliderComponent;
+                out.append("\nCollider type 2");
+                out.append("\nPosition: ").append(obstacle.getPosition());
+                out.append("\nDimensions: ").append(box.getDimensions());
             }
         }
-        return out;
+        return out.toString();
     }
 
     public List<String> getObstaclesStringList() {
-        List<String> out = new ArrayList<String>();
+        List<String> out = new ArrayList<>();
         out.add("\nObstacles: " + _obstacles.size());
         for (GameObject obstacle : _obstacles) {
             ColliderComponent colliderComponent = obstacle.getColliderComponent();
-            if (colliderComponent instanceof SphereCollider) {
-                SphereCollider sphere = (SphereCollider) colliderComponent;
+            if (colliderComponent instanceof SphereCollide) {
+                SphereCollide sphere = (SphereCollide) colliderComponent;
                 out.add("\nCollider type: 1");
                 out.add("\nPosition: " + obstacle.getPosition().x + " " + obstacle.getPosition().y + " " + obstacle.getPosition().z + " ");
                 out.add("\nDimensions: " + sphere.getDimensions().x + " " + sphere.getDimensions().y + " " + sphere.getDimensions().z + " ");
-            } else if (colliderComponent instanceof BoxCollider) {
-                BoxCollider box = (BoxCollider) colliderComponent;
+            } else if (colliderComponent instanceof BoxCollide) {
+                BoxCollide box = (BoxCollide) colliderComponent;
                 out.add("\nCollider type: 2");
                 out.add("\nPosition: " + obstacle.getPosition().x + " " + obstacle.getPosition().y + " " + obstacle.getPosition().z + " ");
                 out.add("\nDimensions: " + box.getDimensions().x + " " + box.getDimensions().y + " " + box.getDimensions().z + " ");
@@ -244,13 +234,13 @@ public class Course {
             GameObject obj = new GameObject(pos);
             switch (cacheData.type) {
                 case 1:
-                    SphereCollider sphere = new SphereCollider(cacheData.position, cacheData.dimensions.x);
+                    SphereCollide sphere = new SphereCollide(cacheData.position, cacheData.dimensions.x);
                     obj.addColliderComponent(sphere);
                     SphereGraphicsComponent graphSphere = new SphereGraphicsComponent(cacheData.dimensions.x, Color.DARK_GRAY);
                     obj.addGraphicComponent(graphSphere);
                     break;
                 case 2:
-                    BoxCollider box = new BoxCollider(cacheData.position, cacheData.dimensions);
+                    BoxCollide box = new BoxCollide(cacheData.position, cacheData.dimensions);
                     obj.addColliderComponent(box);
                     BoxGraphicsComponent boxGraph = new BoxGraphicsComponent(cacheData.dimensions, Color.DARK_GRAY);
                     obj.addGraphicComponent(boxGraph);

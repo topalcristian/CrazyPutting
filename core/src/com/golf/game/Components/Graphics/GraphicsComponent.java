@@ -8,42 +8,42 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
-import com.golf.game.Components.BaseComponent;
+import com.golf.game.Components.AComponent;
 import com.golf.game.GameLogic.GraphicsManager;
 import com.golf.game.GameObjects.Ball;
 
-public abstract class GraphicsComponent extends BaseComponent {
-    private static Quaternion _emptyQuaternion = new Quaternion();
-    protected Model _model;
-    protected ModelInstance _instance;
-    protected Color _color;
+public abstract class GraphicsComponent extends AComponent {
+    private static Quaternion emptyQuaternion = new Quaternion();
+    protected Model model;
+    protected ModelInstance instance;
+    protected Color color;
 
     public GraphicsComponent() {
-        GraphicsManager.addGraphics3DComponent(this);
+        GraphicsManager.addGraphicsComponent(this);
     }
 
-    public void setColor(Color pCustomColor) {
-        _color = pCustomColor;
-        if (_instance != null)
-            _instance.materials.get(0).set(ColorAttribute.createDiffuse(_color));
+    public void setColor(Color CustomColor) {
+        color = CustomColor;
+        if (instance != null)
+            instance.materials.get(0).set(ColorAttribute.createDiffuse(color));
     }
 
     public ModelInstance getInstance() {
-        return _instance;
+        return instance;
     }
 
-    public void render(ModelBatch pModelBatch, Environment pEnvironment) {
-        if (_owner.enabled == false) return;
-        Vector3 pos2d = _owner.getPosition();
+    public void render(ModelBatch modelBatch, Environment environment) {
+        if (!owner.enabled) return;
+        Vector3 pos2d = owner.getPosition();
         Vector3 pos = new Vector3(pos2d.x, pos2d.z, pos2d.y);
-        if (_owner instanceof Ball)//here change color for owner ball
+        if (owner instanceof Ball)//here change color for owner ball
             pos.y += 20f;
-        _instance.transform.set(pos, _emptyQuaternion);
-        pModelBatch.render(_instance, pEnvironment);
+        instance.transform.set(pos, emptyQuaternion);
+        modelBatch.render(instance, environment);
     }
 
     public void dispose() {
-        _model = null;
-        _instance = null;
+        model = null;
+        instance = null;
     }
 }

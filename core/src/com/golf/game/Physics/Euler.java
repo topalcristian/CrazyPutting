@@ -1,4 +1,3 @@
-
 package com.golf.game.Physics;
 
 import com.badlogic.gdx.math.Vector3;

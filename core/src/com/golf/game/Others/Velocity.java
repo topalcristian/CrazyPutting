@@ -1,7 +1,5 @@
 package com.golf.game.Others;
 
-import com.badlogic.gdx.math.Vector3;
-
 public class Velocity {
     private static Velocity instance;
     public float Vx;
@@ -74,11 +72,6 @@ public class Velocity {
         this.Vy += velocity.Vy;
     }
 
-    public float multiply(Vector3 vector) {
-        float xAxis = this.Vx * vector.x;
-        float yAxis = this.Vy * vector.y;
-        return xAxis + yAxis;
-    }
 
     public void sub(Velocity velocity) {
         this.Vx -= velocity.Vx;

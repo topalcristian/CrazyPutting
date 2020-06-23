@@ -137,7 +137,6 @@ public class CourseCreatorScreen implements Screen {
     }
 
     public void confirmButtonClicked() {
-        // TODO game logic needs to be implemented
         createCourse();
     }
 

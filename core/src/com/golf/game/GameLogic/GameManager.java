@@ -1,4 +1,3 @@
-
 package com.golf.game.GameLogic;
 
 import com.badlogic.gdx.Gdx;
@@ -7,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import com.golf.game.Bot.*;
 import com.golf.game.Components.Colliders.CollisionManager;
-import com.golf.game.Components.Colliders.SphereCollider;
+import com.golf.game.Components.Colliders.SphereCollide;
 import com.golf.game.Components.Graphics.SphereGraphicsComponent;
 import com.golf.game.GameObjects.Ball;
 import com.golf.game.GameObjects.Hole;
@@ -28,13 +27,10 @@ public class GameManager {
     private GolfGame _game;
     private int _turns;
     private int _mode;
-
-
     private Ball Ball;
     private Hole Hole;
     private float[][] allInput;
-
-    private ArrayList<Velocity> mazeVelocities = new ArrayList<Velocity>();
+    private ArrayList<Velocity> mazeVelocities = new ArrayList<>();
 
 
     public GameManager(GolfGame pGame, int pMode) {
@@ -65,7 +61,7 @@ public class GameManager {
 
         int radius = 20;
         Ball.addGraphicComponent(new SphereGraphicsComponent(radius, Color.WHITE));
-        SphereCollider sphere = new SphereCollider(CourseManager.getStartPosition(0), 10);
+        SphereCollide sphere = new SphereCollide(CourseManager.getStartPosition(0), 10);
         Ball.addColliderComponent(sphere);
         Hole.addGraphicComponent(new SphereGraphicsComponent(radius * 2.0f, Color.BLACK));
         _ball = Ball;
@@ -73,16 +69,12 @@ public class GameManager {
 
     }
 
-    /*
-     If the balls are further away than they should then we find the centroid and
-     position the balls relative to their position and centroid but within the allowed distance
-     */
 
-    public void update(float pDelta) {
-        if (pDelta > 0.03) {
-            pDelta = 0.00166f;
+    public void update(float delta) {
+        if (delta > 0.03) {
+            delta = 0.00166f;
         }
-        pDelta = 1 / 60f;
+        delta = 1 / 60f;
         if (mazeVelocities.size() == 0) {
 
             handleInput(_game.input);
@@ -103,9 +95,8 @@ public class GameManager {
 
         Physics.physics.update();
         CollisionManager.update();
-        updateGameLogic(pDelta);
-        if (Gdx.input.isKeyPressed(Input.Keys.L)) {
-        }
+        updateGameLogic(delta);
+
 
     }
 
@@ -151,7 +142,6 @@ public class GameManager {
                     _ball.setVelocity(ReadAndAnalyse.getResult()[_turns][0], ReadAndAnalyse.getResult()[_turns][1]);
                     _ball.fix(false);
                     increaseTurnCount();
-                } else if (_turns >= ReadAndAnalyse.getN()) {
                 }
             }
         } else if (_mode == 3) {
@@ -172,6 +162,10 @@ public class GameManager {
                 mazeBotType = "advanced";
                 chooseMazeBot();
             }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.X) && !_ball.isMoving()) {
+                mazeBotType = "ss";
+                chooseMazeBot();
+            }
         }
     }
 
@@ -184,27 +178,35 @@ public class GameManager {
         allowedOffset = 30;
         int startX = Math.round(CourseManager.getStartPosition(0).x);
         int startY = Math.round(CourseManager.getStartPosition(0).y);
-        Map<Node> nodeMap = new Map<Node>(2000, 2000, new ExampleFactory());
+        Map<Node> nodeMap = new Map<>(2000, 2000, new ExampleFactory());
         ArrayList<Node> path = (ArrayList<Node>) nodeMap.findPath(startX, startY);
 
         if (path != null) {
             MazeBot mazeBot = new MazeBot(_ball, _hole, CourseManager.getActiveCourse(), path, nodeMap);
-            if (mazeBotType.equals("simple")) {
-                mazeVelocities = mazeBot.runSimpleMazeBot();
-                _ball.fix(false);
-            } else if (mazeBotType.equals("advanced")) {
-                mazeVelocities = mazeBot.runAdvancedMazeBot();
-                _ball.fix(false);
-            } else {
-                Gdx.app.log("Log", "Error: No bot was started");
+            switch (mazeBotType) {
+                case "simple":
+                    mazeVelocities = mazeBot.runSimpleMazeBot();
+                    _ball.fix(false);
+                    break;
+                case "advanced":
+                    mazeVelocities = mazeBot.runAdvancedMazeBot();
+                    _ball.fix(false);
+                    break;
+                case "ss":
+                    PledgeBot pledgeBot = new PledgeBot(_ball, _hole, CourseManager.getActiveCourse(), path, nodeMap);
+                    pledgeBot.move();
+                    _ball.fix(false);
+                    break;
+                default:
+                    Gdx.app.log("Log", "Error: No bot was started");
+                    break;
             }
-        } else {
         }
         _ball.setPosition(CourseManager.getStartPosition(0));
     }
 
     public boolean isGameWon() {
-        return isBallInTheHole(Ball, Hole) != false && Ball.isSlow();
+        return isBallInTheHole(Ball, Hole) && Ball.isSlow();
     }
 
     public Ball getPlayer() {
@@ -212,9 +214,9 @@ public class GameManager {
     }
 
     public void checkConstrainsAndSetVelocity(float[][] input) {
-        for (int i = 0; i < input.length; i++) {
-            float speed = checkMaxSpeedConstrain(input[i][0]);
-            float angle = input[i][1];
+        for (float[] floats : input) {
+            float speed = checkMaxSpeedConstrain(floats[0]);
+            float angle = floats[1];
             if (speed == 0) {
                 speed = 0.000001f;
             }
@@ -246,13 +248,7 @@ public class GameManager {
     }
 
 
-    /////////////////////////////////////////////////////////////////////
-    //////////Methods for spline Edit Mode//////////////////////////////
-    ////////////////////////////////////////////////////////////////////
 
-    /**
-     * Overwrite the position of ball and hole when saving the new coordinates of the edited course by spplines
-     */
     public void saveBallAndHolePos() {
 
         CourseManager.getActiveCourse().setBallStartPos(Ball.getPosition(), 0);
@@ -260,9 +256,6 @@ public class GameManager {
 
     }
 
-    /**
-     * Updates the height position of the ball and hole after the course changed using spline editor
-     */
     public void updateObjectPos() {
 
         Ball _ball = Ball;
@@ -271,7 +264,6 @@ public class GameManager {
         _hole.getPosition().z = CourseManager.calculateHeight(_hole.getPosition().x, _hole.getPosition().y);
 
     }
-
 
     public void updateBallPos(Vector3 pos) {
         Ball.setPosition(pos);

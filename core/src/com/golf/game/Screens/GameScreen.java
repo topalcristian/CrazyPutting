@@ -20,7 +20,7 @@ import com.golf.game.GameLogic.GraphicsManager;
 import com.golf.game.GameLogic.TerrainEditor;
 import com.golf.game.GameObjects.GUI;
 import com.golf.game.GameObjects.GameObject;
-import com.golf.game.Graphics3D.TerrainGenerator;
+import com.golf.game.GraphicsGenerator.TerrainGenerator;
 
 
 public class GameScreen extends InputAdapter implements Screen {
@@ -42,7 +42,7 @@ public class GameScreen extends InputAdapter implements Screen {
     private InputMultiplexer inputMain;
     private CameraInputController camController;
     private float speedCache;
-    private boolean speedPressing = false;
+    private boolean ballPressed = false;
     private GameObject shootArrow;
     private Vector3 dirShot;
     private boolean won = false;
@@ -170,18 +170,7 @@ public class GameScreen extends InputAdapter implements Screen {
     }
 
 
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) return false;
-        shootArrow.destroy();
-        Vector3 playerPos = gameManager.getPlayer().getPosition();
-        Vector3 currentPos = terrainEditor.getObject(screenX, screenY);
-        int radius = 40;
-        currentPos.y = playerPos.z + radius;
-        ArrowGraphicsComponent g = new ArrowGraphicsComponent(new Vector3(playerPos), currentPos, Color.DARK_GRAY);
-        shootArrow.addGraphicComponent(g);
-        return false;
-    }
+
 */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -192,9 +181,10 @@ public class GameScreen extends InputAdapter implements Screen {
         if (dirShot == null) return false;
         speedCache = 0;
         Vector3 pos = terrainEditor.getObject(screenX, screenY);
-
-        speedPressing = true;
         Vector3 playerPos = gameManager.getPlayer().getPosition();
+        if (Math.abs(pos.x - playerPos.x) > 10 && Math.abs(pos.y - playerPos.z) > 10 && Math.abs(pos.z - playerPos.y) > 10)
+            return false;
+        ballPressed = true;
         shootArrow = new GameObject((new Vector3(playerPos)));
         int radius = 20;
         pos.y = playerPos.z + radius;
@@ -203,9 +193,10 @@ public class GameScreen extends InputAdapter implements Screen {
         return false;
     }
 
+
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (speedPressing && dirShot != null) {
+        if (ballPressed && dirShot != null) {
 
             shootArrow.destroy();
             Vector3 playerPos = gameManager.getPlayer().getPosition();
@@ -233,9 +224,22 @@ public class GameScreen extends InputAdapter implements Screen {
 
             gameManager.shootBallFromGameScreen3DInput(input);
         }
-        speedPressing = false;
+        ballPressed = false;
         return false;
 
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || !ballPressed) return false;
+        shootArrow.destroy();
+        Vector3 playerPos = gameManager.getPlayer().getPosition();
+        Vector3 currentPos = terrainEditor.getObject(screenX, screenY);
+        int radius = 40;
+        currentPos.y = playerPos.z + radius;
+        ArrowGraphicsComponent g = new ArrowGraphicsComponent(new Vector3(playerPos), currentPos, Color.DARK_GRAY);
+        shootArrow.addGraphicComponent(g);
+        return false;
     }
 
     private void swapYZ(Vector3 v) {

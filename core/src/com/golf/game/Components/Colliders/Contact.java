@@ -4,13 +4,8 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Contact {
 
-    //Holds the position of the contact
     public Vector3 contactPoint;
-
-    //Holds the direction of the contact
     public Vector3 contactNormal;
-
-    //Holds the depth of penetration at the contact point
     public float penetration;
 
     public ColliderComponent object1;
@@ -30,8 +25,7 @@ public class Contact {
     }
 
     public String toString() {
-        String result = "ContactPoint: " + contactPoint + "\nContactNormal: " + contactNormal + "\nPenetration: " + penetration;
-        return result;
+        return "ContactPoint: " + contactPoint + "\nContactNormal: " + contactNormal + "\nPenetration: " + penetration;
     }
 
     @Override

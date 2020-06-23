@@ -2,7 +2,7 @@ package com.golf.game.GameObjects;
 
 import com.badlogic.gdx.math.Vector3;
 import com.golf.game.Components.Colliders.CollisionManager;
-import com.golf.game.Components.Colliders.SphereCollider;
+import com.golf.game.Components.Colliders.SphereCollide;
 import com.golf.game.Others.Velocity;
 import com.golf.game.Physics.Physics;
 
@@ -89,8 +89,7 @@ public class Ball extends PhysicsGameObject implements Comparable<Ball> {
 
     @Override
     public float getSpeed() {
-        float result = (float) Math.sqrt(Math.pow(velocity.Vx, 2) + Math.pow(velocity.Vy, 2));
-        return result;
+        return (float) Math.sqrt(Math.pow(velocity.Vx, 2) + Math.pow(velocity.Vy, 2));
     }
 
     @Override
@@ -168,7 +167,7 @@ public class Ball extends PhysicsGameObject implements Comparable<Ball> {
         newBall._position = _position;
         newBall.setPositionXYZ(getPosition().x, getPosition().y);
         if (getColliderComponent() != null) {
-            SphereCollider sp = new SphereCollider(newBall.getPosition(), 20);
+            SphereCollide sp = new SphereCollide(newBall.getPosition(), 20);
             newBall.addColliderComponent(sp);
         }
         newBall.velocity = new Velocity();

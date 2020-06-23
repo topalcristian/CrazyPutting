@@ -9,18 +9,18 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
-import com.golf.game.Components.Colliders.BoxCollider;
+import com.golf.game.Components.Colliders.BoxCollide;
 import com.golf.game.Components.Colliders.ColliderComponent;
 import com.golf.game.Components.Colliders.CollisionManager;
 import com.golf.game.Components.Graphics.BoxGraphicsComponent;
 import com.golf.game.Components.Graphics.CustomGraphicsComponent;
 import com.golf.game.Components.Graphics.GraphicsComponent;
 import com.golf.game.GameLogic.Splines.BiCubicSpline;
-import com.golf.game.GameLogic.Splines.SplineInfo;
+import com.golf.game.GameLogic.Splines.Spliner;
 import com.golf.game.GameObjects.GUI;
 import com.golf.game.GameObjects.GameObject;
 import com.golf.game.GameObjects.SplinePoint;
-import com.golf.game.Graphics3D.TerrainGenerator;
+import com.golf.game.GraphicsGenerator.TerrainGenerator;
 
 import java.util.List;
 
@@ -98,9 +98,9 @@ public class TerrainEditor extends InputAdapter {
     }
 
     private void showSplinePoints() {
-        for (int i = 0; i < _splinePoints.length; i++) {
+        for (SplinePoint[] splinePoint : _splinePoints) {
             for (int j = 0; j < _splinePoints[0].length; j++) {
-                _splinePoints[i][j].enabled = _splineEdit;
+                splinePoint[j].enabled = _splineEdit;
             }
         }
     }
@@ -165,14 +165,14 @@ public class TerrainEditor extends InputAdapter {
         GameObject obstacle = new GameObject(pPos);
         Vector3 dim = _gui.getObstacleDimensions();
         obstacle.addGraphicComponent(new BoxGraphicsComponent(dim, Color.DARK_GRAY));
-        BoxCollider box = new BoxCollider(pPos, new Vector3(_gui.getObstacleDimensions()));
+        BoxCollide box = new BoxCollide(pPos, new Vector3(_gui.getObstacleDimensions()));
         obstacle.addColliderComponent(box);
         CourseManager.addObstacle(obstacle);
 
     }
 
     private void eraseObject(int screenX, int screenY) {
-        Ray ray = _cam3D.getPickRay(screenX, screenY, 0, 0, _cam3D.viewportWidth, _cam3D.viewportHeight);//TODO:Get the WindowsWidth -300 from a constant variable somewhere in graphics, dont hardcode
+        Ray ray = _cam3D.getPickRay(screenX, screenY, 0, 0, _cam3D.viewportWidth, _cam3D.viewportHeight);
         List<GameObject> obstacles = CourseManager.getActiveCourse().getObstaclesList();
         for (GameObject obj : obstacles) {
             ColliderComponent col = obj.getColliderComponent();
@@ -189,15 +189,15 @@ public class TerrainEditor extends InputAdapter {
     }
 
     private SplinePoint intersectSplinePoint(int screenX, int screenY) {
-        Ray ray = _cam3D.getPickRay(screenX, screenY, 0, 0, _cam3D.viewportWidth, _cam3D.viewportHeight);//Done:Get the WindowsWidth -300 from a constant variable somewhere in graphics, dont hardcode
+        Ray ray = _cam3D.getPickRay(screenX, screenY, 0, 0, _cam3D.viewportWidth, _cam3D.viewportHeight);
         Vector3 intersect = new Vector3();
-        for (int i = 0; i < _splinePoints.length; i++) {
+        for (SplinePoint[] splinePoint : _splinePoints) {
             for (int j = 0; j < _splinePoints[0].length; j++) {
-                Vector3 pos = new Vector3(_splinePoints[i][j].getPosition());
+                Vector3 pos = new Vector3(splinePoint[j].getPosition());
                 swapYandZ(pos);
                 boolean found = Intersector.intersectRaySphere(ray, pos, _sPointRadius, intersect);
                 if (found)
-                    return _splinePoints[i][j];
+                    return splinePoint[j];
             }
         }
         return null;
@@ -205,7 +205,7 @@ public class TerrainEditor extends InputAdapter {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (_splineEdit == false) return false;
+        if (!_splineEdit) return false;
         Vector2 prevDraggingPos;
         if (_dragging)
             prevDraggingPos = new Vector2(_buttonDragCoord); //If is first frame of drag then prev distance is 0
@@ -224,7 +224,7 @@ public class TerrainEditor extends InputAdapter {
         spl.setHeight(_draggingPoint.getPosition().z + prevDraggingPos.y - _buttonDragCoord.y);
 
         BiCubicSpline spline = TerrainGenerator.getSpline();
-        for (SplineInfo sp : spline.getSplineList()) {
+        for (Spliner sp : spline.getSplineList()) {
             spline.updateSplineCoeff(sp);
         }
         updateTerrain();
@@ -232,7 +232,7 @@ public class TerrainEditor extends InputAdapter {
 
     private void updateTerrain() {
         BiCubicSpline spline = TerrainGenerator.getSpline();
-        List<SplineInfo> infoList = spline.getSplineList();
+        List<Spliner> infoList = spline.getSplineList();
         for (int i = 0; i < infoList.size(); i++) {
             Mesh changinMesh = infoList.get(i).getNode().parts.get(0).meshPart.mesh;
             float[] vertices = new float[changinMesh.getNumVertices() * changinMesh.getVertexSize() / 4];
@@ -243,7 +243,7 @@ public class TerrainEditor extends InputAdapter {
         }
     }
 
-    private void updateVertices(float[] vert, BiCubicSpline spline, int pNode, SplineInfo info) {
+    private void updateVertices(float[] vert, BiCubicSpline spline, int pNode, Spliner info) {
 
         List<Vector3> triangles = TerrainGenerator.triangleList;
         int count = 0;
@@ -254,7 +254,7 @@ public class TerrainEditor extends InputAdapter {
             vert[i] = spline.getHeightAt(new Vector2(vert[i - 1], vert[i + 1]));
             if (vert[i] < -1 && aboveWater)
                 vert[i + 2] = Color.toFloatBits(Color.BLUE.r, Color.BLUE.g, Color.BLUE.b, Color.BLUE.a);
-            else if (aboveWater == false && vert[i] >= -1)
+            else if (!aboveWater && vert[i] >= -1)
                 vert[i + 2] = Color.toFloatBits(Color.GREEN.r, Color.GREEN.g, Color.GREEN.b, Color.GREEN.a);
             triangles.get(count + offset).y = vert[i];
             count++;
@@ -265,7 +265,7 @@ public class TerrainEditor extends InputAdapter {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         touchDownLogicMovedToTouchUp(screenX, screenY, pointer, button);
-        if (_splineEdit == false) return false;
+        if (!_splineEdit) return false;
         if (_dragging) {
             GraphicsComponent gp = _draggingPoint.getGraphicComponent();
             System.out.println(_draggingPoint.getPosition());
@@ -291,7 +291,6 @@ public class TerrainEditor extends InputAdapter {
         Vector3 intersectPos = new Vector3();
         if (Intersector.intersectRayTriangles(ray, TerrainGenerator.triangleList, intersectPos)) {
             return intersectPos;
-        } else {
         }
 
         return null;

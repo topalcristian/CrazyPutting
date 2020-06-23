@@ -30,7 +30,7 @@ public class BiCubicSpline {
             {0, 0, 0, 0, 2, 0, -2, 0, 0, 0, 0, 0, 1, 0, 1, 0},
             {-6, 6, 6, -6, -4, -2, 4, 2, -3, 3, -3, 3, -2, -1, -2, -1},
             {4, -4, -4, 4, 2, 2, -2, -2, 2, -2, 2, -2, 1, 1, 1, 1}};
-    private List<SplineInfo> _splineList = new ArrayList<SplineInfo>();
+    private List<Spliner> _splineList = new ArrayList<>();
     private SplinePoint[][] _splinePoints = new SplinePoint[6][6];
     private Vector2 _dimensions;
 
@@ -52,8 +52,8 @@ public class BiCubicSpline {
         }
     }
 
-    public SplineInfo createSplineBlock(int[][] points, Vector2 posStart, Vector2 pDimensions, float pScale, Node pNode) {
-        SplineInfo spline = new SplineInfo(posStart, pDimensions, pScale, pNode);
+    public Spliner createSplineBlock(int[][] points, Vector2 posStart, Vector2 pDimensions, float pScale, Node pNode) {
+        Spliner spline = new Spliner(posStart, pDimensions, pScale, pNode);
 
         _splineList.add(spline);
         updateSplineCoeff(spline, points);
@@ -85,7 +85,7 @@ public class BiCubicSpline {
         return out;
     }
 
-    public SplineInfo updateSplineCoeff(SplineInfo info, int[][] pPoints) {
+    public Spliner updateSplineCoeff(Spliner info, int[][] pPoints) {
 
         double[][] cache = mulMat(A, getHeightInGrid(pPoints));
         double[][] newCoeff = {{cache[0][0], cache[4][0], cache[8][0], cache[12][0]},
@@ -97,7 +97,7 @@ public class BiCubicSpline {
         return info;
     }
 
-    public SplineInfo updateSplineCoeff(SplineInfo info) {
+    public Spliner updateSplineCoeff(Spliner info) {
         double[][] cache = mulMat(A, getHeightInGrid(info.getPoints()));
         double[][] newCoeff = {{cache[0][0], cache[4][0], cache[8][0], cache[12][0]},
                 {cache[1][0], cache[5][0], cache[9][0], cache[13][0]},
@@ -109,19 +109,18 @@ public class BiCubicSpline {
     }
 
     public double[][] getHeightInGrid(int[][] ind) {
-        double[][] points = {{_splinePoints[ind[0][0]][ind[0][1]].getSplineHeight()}, {_splinePoints[ind[1][0]][ind[1][1]].getSplineHeight()}, {_splinePoints[ind[2][0]][ind[2][1]].getSplineHeight()}, {_splinePoints[ind[3][0]][ind[3][1]].getSplineHeight()},
+        return new double[][]{{_splinePoints[ind[0][0]][ind[0][1]].getSplineHeight()}, {_splinePoints[ind[1][0]][ind[1][1]].getSplineHeight()}, {_splinePoints[ind[2][0]][ind[2][1]].getSplineHeight()}, {_splinePoints[ind[3][0]][ind[3][1]].getSplineHeight()},
                 {0}, {0}, {0}, {0},
                 {0}, {0}, {0}, {0},
                 {0}, {0}, {0}, {0}};
-        return points;
     }
 
     /*
     If point is not in spline then return -10 as if it was water
      */
     public float getHeightAt(Vector2 pPos) {
-        for (SplineInfo spline : _splineList) {
-            if (spline.getRec().contains(pPos))
+        for (Spliner spline : _splineList) {
+            if (spline.getRectangle().contains(pPos))
                 return getHeightAt(pPos, spline);
         }
         return -10;
@@ -139,7 +138,7 @@ public class BiCubicSpline {
 
     }
 
-    public float getHeightAt(Vector2 pPos, SplineInfo spline) {
+    public float getHeightAt(Vector2 pPos, Spliner spline) {
         Vector2 posLocal = spline.normPos(pPos);
 
         double[][] x = {{1, posLocal.x, Math.pow(posLocal.x, 2), Math.pow(posLocal.x, 3)}};
@@ -154,7 +153,7 @@ public class BiCubicSpline {
         return _splinePoints;
     }
 
-    public List<SplineInfo> getSplineList() {
+    public List<Spliner> getSplineList() {
         return _splineList;
     }
 }

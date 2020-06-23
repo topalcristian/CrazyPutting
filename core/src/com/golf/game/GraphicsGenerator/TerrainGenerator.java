@@ -1,4 +1,4 @@
-package com.golf.game.Graphics3D;
+package com.golf.game.GraphicsGenerator;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.golf.game.GameLogic.CourseManager;
 import com.golf.game.GameLogic.Splines.BiCubicSpline;
-import com.golf.game.GameLogic.Splines.SplineInfo;
+import com.golf.game.GameLogic.Splines.Spliner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 public class TerrainGenerator {
 
 
-    public static List<Vector3> triangleList = new ArrayList<Vector3>();
+    public static List<Vector3> triangleList = new ArrayList<>();
     static double[][] p;
 
     private static BiCubicSpline _spline;
@@ -61,7 +61,7 @@ public class TerrainGenerator {
                 Node node = modelBuilder.node();
                 String code = "i " + i + " j " + j;
                 Vector2 start = new Vector2(scaleVertex * (startPosX + verticesPerSide * i), scaleVertex * (startPosY + verticesPerSide * j));
-                SplineInfo splineNode = _spline.createSplineBlock(generateSquareIndexes(i, j), start, new Vector2(verticesPerSide * scaleVertex, verticesPerSide * scaleVertex), scaleVertex, node);
+                Spliner splineNode = _spline.createSplineBlock(generateSquareIndexes(i, j), start, new Vector2(verticesPerSide * scaleVertex, verticesPerSide * scaleVertex), scaleVertex, node);
                 node.id = "n " + nodeAmount;
                 nodeAmount++;
                 MeshPartBuilder meshBuilder = modelBuilder.part("part " + code, GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.ColorPacked, m);
@@ -95,7 +95,7 @@ public class TerrainGenerator {
 
     }
 
-    private static void createMesh(MeshPartBuilder pBuilder, int startX, int startY, int length, float scaleVertexSize, boolean pSplines, SplineInfo spline) {
+    private static void createMesh(MeshPartBuilder pBuilder, int startX, int startY, int length, float scaleVertexSize, boolean usesSplines, Spliner spline) {
         float scaleAmount = scaleVertexSize;
         for (int i = startY; i < startY + length; i++) {
             for (int j = startX; j < startX + length; j++) {
@@ -104,7 +104,7 @@ public class TerrainGenerator {
                 float h2 = 0;
                 float h3 = 0;
                 float h4 = 0;
-                if (pSplines == false) {
+                if (usesSplines == false) {
                     h1 = CourseManager.calculateHeight(j * (scaleAmount), scaleAmount * i);
                     h2 = CourseManager.calculateHeight(j * (scaleAmount), scaleAmount + scaleAmount * i);
                     h3 = CourseManager.calculateHeight(scaleAmount + j * scaleAmount, scaleAmount * i);
@@ -150,7 +150,7 @@ public class TerrainGenerator {
     }
 
     private static void checkUnderWaterVertex(com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo ver) {
-        if (true && ver.position.y < -1) {
+        if (ver.position.y < -1) {
             ver.position.y = 0;
             ver.setCol(Color.BLUE);
             ver.setNor(0, 1, 0);

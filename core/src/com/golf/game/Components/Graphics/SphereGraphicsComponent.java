@@ -15,20 +15,20 @@ public class SphereGraphicsComponent extends GraphicsComponent {
     private float _height;
 
 
-    public SphereGraphicsComponent(float pRadius, Color pColor) {
-        _color = pColor;
-        _width = pRadius;
-        _deep = pRadius;
-        _height = pRadius;
+    public SphereGraphicsComponent(float radius, Color color) {
+        this.color = color;
+        _width = radius;
+        _deep = radius;
+        _height = radius;
         initSphere();
     }
 
 
     private void initSphere() {
-        GraphicsManager.addGraphics3DComponent(this);
+        GraphicsManager.addGraphicsComponent(this);
         ModelBuilder modelBuilder = new ModelBuilder();
-        _model = modelBuilder.createSphere(_width, _height, _deep, 24, 24, new Material(ColorAttribute.createDiffuse(_color)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        _instance = new ModelInstance(_model);
+        model = modelBuilder.createSphere(_width, _height, _deep, 24, 24, new Material(ColorAttribute.createDiffuse(color)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        instance = new ModelInstance(model);
     }
 
 }
