@@ -49,7 +49,7 @@ public class MenuScreen implements Screen {
 
 
         batch = golfGame.batch;
-        sprite = new Sprite(new Texture(Gdx.files.internal("background.jpg")));
+        sprite = new Sprite(new Texture(Gdx.files.internal("backgroundMain.jpg")));
         sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 
@@ -135,7 +135,7 @@ public class MenuScreen implements Screen {
 
         Table tablePhysics = new Table();
         tablePhysics.setWidth(stage.getWidth());
-        tablePhysics.setPosition(400, Gdx.graphics.getHeight() - 200);
+        tablePhysics.setPosition(0, Gdx.graphics.getHeight() - 700);
         tablePhysics.row();
         tablePhysics.add(buttonPhysicsE).size(100, 50);
         tablePhysics.add(buttonPhysicsV).size(100, 50);
@@ -148,7 +148,7 @@ public class MenuScreen implements Screen {
         table.align(Align.center | Align.top);
         table.setPosition(0, Gdx.graphics.getHeight());
 
-        table.padTop(150);
+        table.padTop(350);
         table.add(soloButton).size(300, 50).padBottom(20);
         table.row();
         table.add(fileButton).size(300, 50).padBottom(20);

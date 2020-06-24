@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class GeneticAlgorithm extends SuperBot {
+public class GeneticAlgorithm extends AbstractBot {
     private final int POPULATION_SIZE = 200;
     private final double ELITE_RATE = 0.1;
     private final double MUTATION_RATE = 0.3;
@@ -45,8 +45,6 @@ public class GeneticAlgorithm extends SuperBot {
         this(hole, course, initial_position, mazeFitness);
         this.maxIterations = maxIterations;
         this.map = map;
-        System.out.println("here");
-
     }
 
     public void runGenetic() {

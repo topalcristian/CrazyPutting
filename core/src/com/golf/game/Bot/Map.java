@@ -66,10 +66,8 @@ public class Map<T extends AbstractNode> {
         closedList = new ArrayList<T>();
         boolean isOpened = false;
 
-        /* Converting coords to node indices*/
         oldX += 1000;
         oldY += 1000;
-        /* Converting coords to node indices*/
 
         current = nodes[oldX][oldY];
         current.setPrevious(current);
@@ -125,7 +123,6 @@ public class Map<T extends AbstractNode> {
                 s1.setgCosts(s.getPrevious().getgCosts() + calculateStraight(s.getPrevious().getxIndex(), s.getPrevious().getyIndex(), s1.getxIndex(), s1.getyIndex()));
             }
         } else {
-            //System.out.println("Didnt find los");
             if (s.getgCosts() + calculateStraight(s.getxIndex(), s.getyIndex(), s1.getxIndex(), s1.getyIndex()) < s1.getgCosts()) {
                 s1.setPrevious(s);
                 s1.setgCosts(s.getgCosts() + calculateStraight(s.getxIndex(), s.getyIndex(), s1.getxIndex(), s1.getyIndex()));

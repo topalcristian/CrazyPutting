@@ -1,4 +1,4 @@
-package com.golf.game.GameLogic;
+package com.golf.game.GraphicsGenerator;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
@@ -15,12 +15,13 @@ import com.golf.game.Components.Colliders.CollisionManager;
 import com.golf.game.Components.Graphics.BoxGraphicsComponent;
 import com.golf.game.Components.Graphics.CustomGraphicsComponent;
 import com.golf.game.Components.Graphics.GraphicsComponent;
+import com.golf.game.GameLogic.CourseManager;
+import com.golf.game.GameLogic.GameManager;
 import com.golf.game.GameLogic.Splines.BiCubicSpline;
 import com.golf.game.GameLogic.Splines.Spliner;
 import com.golf.game.GameObjects.GUI;
 import com.golf.game.GameObjects.GameObject;
 import com.golf.game.GameObjects.SplinePoint;
-import com.golf.game.GraphicsGenerator.TerrainGenerator;
 
 import java.util.List;
 
@@ -121,7 +122,7 @@ public class TerrainEditor extends InputAdapter {
         return false;
     }
 
-    private boolean touchDownLogicMovedToTouchUp(int screenX, int screenY, int pointer, int button) {
+    private boolean touchDownLogicMovedToTouchUp(int screenX, int screenY) {
 
         if (_changeBall) {
             Vector3 pos = getObject(screenX, screenY);
@@ -264,11 +265,11 @@ public class TerrainEditor extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        touchDownLogicMovedToTouchUp(screenX, screenY, pointer, button);
+        touchDownLogicMovedToTouchUp(screenX, screenY);
         if (!_splineEdit) return false;
         if (_dragging) {
             GraphicsComponent gp = _draggingPoint.getGraphicComponent();
-            System.out.println(_draggingPoint.getPosition());
+
             gp.setColor(Color.RED);
             _observer.updateObjectPos();
             updateObstaclesHeight();

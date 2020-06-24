@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public abstract class SuperBot {
+public abstract class AbstractBot {
     protected static DecimalFormat df2 = new DecimalFormat(".##");
     protected Hole hole;
     protected Course course;
@@ -26,7 +26,7 @@ public abstract class SuperBot {
     private Vector3 endPosition;
     private boolean _simple = false;
 
-    public SuperBot(Hole hole, Course course, Vector3 initial_position) {
+    public AbstractBot(Hole hole, Course course, Vector3 initial_position) {
         Gdx.app.setLogLevel(Application.LOG_INFO);
         this.hole = hole;
         this.course = course;

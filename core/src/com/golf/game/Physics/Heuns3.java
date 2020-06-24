@@ -9,9 +9,6 @@ public class Heuns3 extends Physics {
         Physics.physics = this;
     }
 
-    /*
-    RK4
-     */
 
     public void updateComponents(PhysicsGameObject obj) {
         state.update(obj);

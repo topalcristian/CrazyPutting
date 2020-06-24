@@ -59,9 +59,9 @@ public class GameManager {
         Ball = new Ball((CourseManager.getStartPosition(0)));
         Hole = new Hole((int) CourseManager.getActiveCourse().getGoalRadius(), (CourseManager.getGoalStartPosition(0)));
 
-        int radius = 20;
+        int radius = 30;
         Ball.addGraphicComponent(new SphereGraphicsComponent(radius, Color.WHITE));
-        SphereCollide sphere = new SphereCollide(CourseManager.getStartPosition(0), 10);
+        SphereCollide sphere = new SphereCollide(CourseManager.getStartPosition(0), 30);
         Ball.addColliderComponent(sphere);
         Hole.addGraphicComponent(new SphereGraphicsComponent(radius * 2.0f, Color.BLACK));
         _ball = Ball;
@@ -169,7 +169,7 @@ public class GameManager {
         }
     }
 
-    public void shootBallFromGameScreen3DInput(float[][] input) {
+    public void shootBallFromGameScreenInput(float[][] input) {
         checkConstrainsAndSetVelocity(input);
 
     }
@@ -193,7 +193,7 @@ public class GameManager {
                     _ball.fix(false);
                     break;
                 case "ss":
-                    PledgeBot pledgeBot = new PledgeBot(_ball, _hole, CourseManager.getActiveCourse(), path, nodeMap);
+                    PledgeBot pledgeBot = new PledgeBot(_ball, _hole, CourseManager.getActiveCourse());
                     mazeVelocities = pledgeBot.move();
                     _ball.fix(false);
                     break;

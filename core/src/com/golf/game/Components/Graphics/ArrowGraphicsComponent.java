@@ -13,12 +13,13 @@ import com.golf.game.GameLogic.GraphicsManager;
 public class ArrowGraphicsComponent extends GraphicsComponent {
     private Vector3 _from;
     private Vector3 _to;
-    private int sizeScale = 200;
+    private float _distance;
 
     public ArrowGraphicsComponent(Vector3 from, Vector3 to, Color pColor) {
         color = pColor;
         _from = from;
         _to = to;
+        _distance = from.dst2(to);
         initArrow();
     }
 
@@ -29,7 +30,7 @@ public class ArrowGraphicsComponent extends GraphicsComponent {
         Vector3 v = new Vector3();
         System.out.println(v.x);
         _to.sub(_from);
-        //
+
         model = modelBuilder.createArrow(_to.x, _to.y, _to.z, 0, 0, 0, 0.1f, 0.3f, 10, GL20.GL_TRIANGLES, new Material(ColorAttribute.createDiffuse(color)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         instance = new ModelInstance(model);
     }

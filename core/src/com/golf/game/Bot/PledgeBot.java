@@ -1,152 +1,72 @@
 package com.golf.game.Bot;
 
-////////////////////////////////////////////////////////////
-//
-// @Author: Boxho Sébastien
-//
-//
-//
-////////////////////////////////////////////////////////////
-
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
-import com.golf.game.Components.Colliders.SphereCollide;
-import com.golf.game.Components.Graphics.GraphicsComponent;
-import com.golf.game.Components.Graphics.SphereGraphicsComponent;
 import com.golf.game.GameLogic.CourseManager;
-import com.golf.game.GameLogic.GameManager;
-import com.golf.game.GameObjects.*;
+import com.golf.game.GameObjects.Ball;
+import com.golf.game.GameObjects.Course;
+import com.golf.game.GameObjects.Hole;
 import com.golf.game.Others.Velocity;
 
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * @Author: Boxho Sébastien
+ * Project Crazy Putting 1-2
+ * 2019-2020
+ */
 public class PledgeBot {
 
     private Course course;
     private Ball ball;
-    private Vector3 goal_pos;
     private Hole hole;
-    private boolean tookRandomShot;
-    private int actualMoveCount = 0;
-    private int initialMoveCount = 0;
-    private int[] ball_positions = new int[2000];
-    private double[] moves;
-    private int duplicateCount = 0;
+    private int ShotCounter = 0;
     private char direction; //o = onward, b = backward, l = left, r = right
-    private List<GameObject> obstaclesList;
-    private Vector3 initial_Position;
-    private SphereCollide sp;
-    private double distance;
-    private double best_distance;
-    private ArrayList<Velocity> wayOut = new ArrayList<>();
-    private ArrayList<Vector3> points;
+    private ArrayList<Velocity> wayOut = new ArrayList<Velocity>();
     private ArrayList<Vector3> positions = new ArrayList<Vector3>();
-    private ArrayList<Node> path;
-    private Map<Node> nodeMap;
     private Vector3 actual_position;
 
-    ////////
-    // ADD SYSOUT
-    ////////
-
-    public PledgeBot(Ball ball, Hole hole, Course course, ArrayList<Node> path, Map<Node> nodeMap) {
-        //ArrayList<Node> path
-
-        this.nodeMap = nodeMap;
+    /**
+     * Constructor
+     *
+     * @param course of the game
+     * @param ball   starting point
+     * @param hole   end point
+     */
+    public PledgeBot(Ball ball, Hole hole, Course course) {
         this.course = course;
         this.ball = ball;
-        ball.fix(false);
         this.hole = hole;
         actual_position = CourseManager.getStartPosition(0);
-
-        ///////////////////
-        GameManager.allowedOffset = 0;
-        points = new ArrayList<Vector3>();
-        for (int i = 0; i < path.size() - 1; i++) {
-            Vector3 pos = new Vector3(path.get(i).getxCoordinate(), path.get(i).getyCoordinate(), 0);
-            Vector3 pos2 = new Vector3(path.get(i + 1).getxCoordinate(), path.get(i + 1).getyCoordinate(), 0);
-            if (euclideanDistance(pos, pos2) < 5) {
-                path.remove(i + 1);
-            }
-        }
-        for (int i = 0; i < path.size(); i++) {
-            points.add(new Vector3(path.get(i).getxCoordinate(), path.get(i).getyCoordinate(), 0));
-        }
-        /*for (Node node : path) {
-            points.add(new Vector3(node.getxCoordinate(), node.getyCoordinate(), 0));
-        }*/
-        //  System.out.print(" (" + startX  + ", " + startY  + ") -> ");
-
-
-        /*for (int i = 0; i < path.size(); i++) {
-            if (i != path.size() - 1)
-                System.out.print("(" + path.get(i).getxCoordinate() + ", " + path.get(i).getyCoordinate() + ") -> ");
-            else System.out.println("(" + path.get(i).getxCoordinate() + ", " + path.get(i).getyCoordinate() + ") ");
-        }*/
-
-        calculateZPoints(points);
-        createGraphicPoints(points);
-
-
-        /*for (Vector3 point : points) {
-            System.out.println("Point x " + point.x + " y " + point.y + " z " + point.z);
-        }*/
-        ///////////////////
-
-        //sp = new SphereCollider(ball.getStartPosition(), 20);
-        //best_distance = euclideanDistance(ball.getPosition(),hole.getPosition());
-        //obstaclesList = course.getObstaclesList();
     }
 
+    /**
+     * Main method, tries to find a solution of Velocities to reach the end point
+     * from the starting point
+     *
+     * @return
+     */
     public ArrayList<Velocity> move() {
         direction = 'o';
         boolean found = false;
-        int iteration = 0;
-        int maxIteration = 30;
-
-        int random = (int) (Math.random() * ((1 - 0) + 1)) - 0;
-
-        /*distance = euclideanDistance(ball.getPosition(),course.getGoalPosition(0));
-        if(distance <= best_distance)
-        {
-            System.out.println(""+ distance);
-        }*/
-
-        /*int initialBallXPos = (int)ball.getPreviousPosition().x;
-        int initialBallYPos = (int)ball.getPreviousPosition().y;
-        int[] initialBallPos = new int[]{initialBallXPos,initialBallYPos};
-
-        int actualBallXPos = (int)ball.getPosition().x;
-        int actualBallYPos = (int)ball.getPosition().y;
-        int[] actualBallPos = new int[]{actualBallXPos,actualBallYPos};*/
-
-
-        actualMoveCount++;
-        tookRandomShot = false;
         boolean duplicate = false;
+
+        System.out.println("Hole position: " + hole.getPosition().x + " : " + hole.getPosition().y);
         System.out.println("Ball first position: " + ball.getPosition().x + " : " + ball.getPosition().y);
-        //ball.setVelocityGA(30,40);
-        //ball.setVelocity(30,40);
 
-
-        //System.out.println("Ball final position: "+ ball.getPosition().x + " : "+ ball.getPosition().y );
-
-        /*while (ball.isMoving())
-        {
-
-            System.out.println("Ball first position: "+ ball.getPosition().x + " : "+ ball.getPosition().y );
-        }*/
+        int iteration = 0;
+        int maxIteration = 50;
 
         //maxIteration is there in case the bot runs into an infinite loop
-        while (found == false && iteration <= maxIteration && !ball.isMoving()) {
+        while (found == false && iteration < maxIteration && !ball.isMoving()) {
             if (iteration >= 3) {
                 //Is true if the bot is stuck in a loop with the same moves
                 duplicate = check_old_moves(wayOut);
             }
 
             if (duplicate) {
-                //We will take a random shot
+                System.out.println("Found duplicate !");
+
+                //We will take a random shot to get out of this loop
                 float random_speed = (float) (Math.random() * (350 - 1) + 1);
                 float random_angle = (float) (Math.random() * (360 - 0) + 1);
                 Velocity random_shot = new Velocity(random_speed, random_angle);
@@ -155,93 +75,108 @@ public class PledgeBot {
                 actual_position = ball.getPosition();
                 wayOut.add(random_shot);
             } else {
+                // Tries if the shot form the actual position to the end point is possible
                 GeneticAlgorithm ga = new GeneticAlgorithm(hole, course, actual_position, false);
                 ga.setSimple(true);
                 ga.runGenetic();
 
                 if (ga.getBestBall().getFitnessValue() == 0) {
+                    //If true, this means the end point was reached the game is successfully over
                     Velocity best_velocity = new Velocity(ga.getBestBall().getVelocityGA().speed,
                             ga.getBestBall().getVelocityGA().angle);
 
-                    actual_position = ga.getBestBall().getPosition();
+                    actual_position = ga.getEndPosition();
                     wayOut.add(best_velocity);
                     found = true;
                     iteration++;
 
-                    System.out.println("Gaol archived !");
                     System.out.println("Ball final position: " + actual_position.x + " : " + actual_position.y);
+                    System.out.println("Gaol archived !");
                 } else {
-                    System.out.println("Search pledge");
-                    System.out.println("Ball position: " + actual_position.x + " : " + actual_position.y);
-
+                    //Calls the pledge method
                     Velocity vel_wayOut = check_clear_direction(actual_position);
                     wayOut.add(vel_wayOut);
 
-                    System.out.println("Found one shot");
-                    System.out.println("Ball new position: " + actual_position.x + " : " + actual_position.y);
+                    System.out.println("Pledge: Ball new position: " + actual_position.x + " : " + actual_position.y);
 
                     iteration++;
                 }
             }
         }
 
-        System.out.println("The way out is: ");
-        for (int i = 0; i < wayOut.size(); i++) {
-            System.out.println("Speed: " + wayOut.get(i).speed + " Angle: " + wayOut.get(i).angle);
+        if (iteration == maxIteration) {
+            System.out.println("-- MAX ITERATION / STOP --");
+        } else {
+            System.out.println("The way out is: ");
+            for (int i = 0; i < wayOut.size(); i++) {
+                //Prints out all the velocities to get from the starting point to the end point
+                System.out.println("Speed: " + wayOut.get(i).speed + " Angle: " + wayOut.get(i).angle);
+            }
         }
-
-        ////////////////
-        //  CHANGE FOR DISTANCE NOT VELOCITY
-        ///////////////
         return wayOut;
     }
 
-    //////////////////////////////////////////////////////////////////////////////
-    /////////////                                                   //////////////
-    //////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////                                 Methods                                                  //////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Calculates the euclidean distance between two points
+     *
+     * @param start, first point
+     * @param goal,  second point
+     * @return distance between those points
+     */
     public double euclideanDistance(Vector3 start, Vector3 goal) {
         double distance = (float) Math.sqrt(Math.pow(start.x - goal.x, 2) + Math.pow(start.y - goal.y, 2) + Math.pow(start.z - goal.z, 2));
         return distance;
     }
 
-    public void calculateZPoints(ArrayList<Vector3> points) {
-        for (int i = 0; i < points.size(); i++) {
-            points.get(i).z = CourseManager.calculateHeight(points.get(i).x, points.get(i).y);
-        }
-    }
-
+    /**
+     * Calculates the height of a given point
+     *
+     * @param x, the x value of a point
+     * @param y, the y value of a point
+     * @return z, the height in function of x and y
+     */
     public float calculateZ(float x, float y) {
         float z = CourseManager.calculateHeight(x, y);
         return z;
     }
 
-    public void createGraphicPoints(ArrayList<Vector3> points) {
-        for (int i = 0; i < points.size() - 1; i++) {
-            SplinePoint point = new SplinePoint(new Vector3(points.get(i)));
-            point.enabled = true;
-            GraphicsComponent pointGraphics = new SphereGraphicsComponent(40, Color.YELLOW);
-            point.addGraphicComponent(pointGraphics);
-        }
-    }
-
+    /**
+     * Updates the actual position of the ball
+     *
+     * @param new_position, new position of the ball
+     */
     public void update_position(Vector3 new_position) {
         actual_position = new_position;
     }
 
+    /**
+     * Checks if the ball is inside the hole
+     *
+     * @return true if inside, false if not
+     */
     public boolean check_win() {
         float radius = hole.getRadius();
         boolean win = false;
-        if (ball.getPosition().x >= hole.getPosition().x - radius &&
-                ball.getPosition().x <= hole.getPosition().x + radius) {
-            if (ball.getPosition().y >= hole.getPosition().y - radius &&
-                    ball.getPosition().y <= hole.getPosition().y + radius) {
+        if (actual_position.x >= hole.getPosition().x - radius &&
+                actual_position.x <= hole.getPosition().x + radius) {
+            if (actual_position.y >= hole.getPosition().y - radius &&
+                    actual_position.y <= hole.getPosition().y + radius) {
                 win = true;
             }
         }
         return win;
     }
 
+    /**
+     * Checks if there are some duplicates (is stuck in a loop) in the moves which were made
+     *
+     * @param moves, list of already made moves
+     * @return true, if there are duplicates, false if not
+     */
     public boolean check_old_moves(ArrayList<Velocity> moves) {
         boolean duplicate = false;
         int size = moves.size();
@@ -258,7 +193,14 @@ public class PledgeBot {
         return duplicate;
     }
 
+    /**
+     * Main pledge method function, tries to find out in which direction it will make the next move
+     *
+     * @param start_position, the actual position of the ball
+     * @return Velocity, the speed and angle of the next move
+     */
     public Velocity check_clear_direction(Vector3 start_position) {
+        //The next move depends on the actual direction of the ball
         if (direction == 'o') {
             positions.clear();
             Velocity rightShot = check_right_direction(start_position);
@@ -522,7 +464,7 @@ public class PledgeBot {
         if (solution_shot != null) {
             return solution_shot;
         } else {
-            return new Velocity(0, 0);
+            return new Velocity(0,0);
         }
     }
 }

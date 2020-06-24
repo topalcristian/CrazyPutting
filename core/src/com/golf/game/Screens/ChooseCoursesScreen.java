@@ -21,10 +21,7 @@ import com.golf.game.GameLogic.CourseManager;
 import static com.golf.game.GameLogic.GraphicsManager.WINDOW_HEIGHT;
 import static com.golf.game.GameLogic.GraphicsManager.WINDOW_WIDTH;
 
-/**
- * Screen in which the user can choose from a variety of already defined courses(with properites such as height function,
- * friction coefficient etc.) or click a button to create his own course.
- */
+
 public class ChooseCoursesScreen implements Screen {
     private static GolfGame game;
     private int _mode;
@@ -43,18 +40,16 @@ public class ChooseCoursesScreen implements Screen {
     private Sprite sprite;
     private Table table;
 
-    public ChooseCoursesScreen(GolfGame game, int pMode) {
+    public ChooseCoursesScreen(GolfGame game, int theMode) {
 
         CourseManager.loadFile("coursesSpline.txt");
         ChooseCoursesScreen.game = game;
-        _mode = pMode;
+        _mode = theMode;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         skin = new Skin(Gdx.files.internal("skin/plain-james-ui.json"));
 
-        /*
-            Background
-         */
+
         batch = game.batch;
         sprite = new Sprite(new Texture(Gdx.files.internal("background.jpg")));
         sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -62,11 +57,11 @@ public class ChooseCoursesScreen implements Screen {
         Label label = new Label("Choose course (Click the name)", skin);
         Vector2 labelSize = new Vector2(50, 50);
         label.setSize(labelSize.x, labelSize.y);
-        label.setPosition(200, WINDOW_HEIGHT * 0.9f - 100);
+        label.setPosition(200, WINDOW_HEIGHT * 0.9f - 500);
 
 
         selectBox = new SelectBox<String>(skin);
-        selectBox.setPosition(300, WINDOW_HEIGHT * 0.9f - 130);
+        selectBox.setPosition(300, WINDOW_HEIGHT * 0.9f - 530);
         Vector2 selectBoxSize = new Vector2(200, 50);
         selectBox.setSize(selectBoxSize.x, selectBoxSize.y);
         String[] boxItems = new String[CourseManager.getCourseAmount()];
@@ -122,7 +117,7 @@ public class ChooseCoursesScreen implements Screen {
         table.setWidth(stage.getWidth());
         table.align(Align.center | Align.top);
         table.setPosition(0, Gdx.graphics.getHeight());
-        table.padTop(150);
+        table.padTop(500);
         table.add(courseProperties).align(Align.left);
         table.row();
         table.add(heightLabel).align(Align.left);
@@ -146,12 +141,9 @@ public class ChooseCoursesScreen implements Screen {
         table.add(createCourseButton).align(Align.left);
 
 
-        /*
-            Add confirmation button.
-         */
         confirmButton = new TextButton("Confirm", skin);
-        Vector2 buttonSize = new Vector2(200, 50);
-        confirmButton.setPosition(WINDOW_WIDTH / 2 - buttonSize.x / 2 + 100, buttonSize.y * 2 - 50);
+        Vector2 buttonSize = new Vector2(350, 50);
+        confirmButton.setPosition(WINDOW_WIDTH / 2 - buttonSize.x / 2 + 50, buttonSize.y * 2 - 50);
         confirmButton.setSize(buttonSize.x, buttonSize.y);
         confirmButton.addListener(new ClickListener() {
 
@@ -162,9 +154,7 @@ public class ChooseCoursesScreen implements Screen {
         });
         confirmButton.setColor(Color.WHITE);
 
-        /*
-            Add all actors to stage so that they are displayed.
-         */
+
         stage.addActor(table);
         stage.addActor(label);
         stage.addActor(confirmButton);
@@ -181,9 +171,7 @@ public class ChooseCoursesScreen implements Screen {
         game.setScreen(new CourseCreatorScreen(game));
     }
 
-    /*
-        update labels if user clicked on a new course.
-     */
+
     public void updateCourseInfo() {
 
         frictionValue.setText(CourseManager.getCourseWithIndex(selectBox.getSelectedIndex()).getFriction() + "");

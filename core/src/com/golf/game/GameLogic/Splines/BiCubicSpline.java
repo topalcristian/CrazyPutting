@@ -115,9 +115,7 @@ public class BiCubicSpline {
                 {0}, {0}, {0}, {0}};
     }
 
-    /*
-    If point is not in spline then return -10 as if it was water
-     */
+
     public float getHeightAt(Vector2 pPos) {
         for (Spliner spline : _splineList) {
             if (spline.getRectangle().contains(pPos))

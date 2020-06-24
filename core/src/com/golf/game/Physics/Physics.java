@@ -18,9 +18,6 @@ public abstract class Physics {
     protected State state = new State();
     float dt = 0.01666f;
 
-    /*
-    Updating physics
-     */
 
     public static void updateCoefficients() {
         mu = CourseManager.getActiveCourse().getFriction();
@@ -45,9 +42,6 @@ public abstract class Physics {
         updateComponents(obj);
     }
 
-    /*
-    other
-     */
 
     public abstract void updateComponents(PhysicsGameObject obj);
 
@@ -70,9 +64,6 @@ public abstract class Physics {
     }
 
 
-    /*
-    Collision
-     */
 
     void dealCollision(PhysicsGameObject obj) {
         obj.setPosition(CourseManager.getStartPosition(0));
@@ -115,9 +106,6 @@ public abstract class Physics {
     }
 
 
-        /*
-    Acceleration a = F/m = G + H
-     */
 
     public boolean isGoingToStop(PhysicsGameObject obj) {
         state.update(obj);
@@ -134,9 +122,6 @@ public abstract class Physics {
         return new Vector3(frictionForce(s).x + gravityForce(s).x, frictionForce(s).y + gravityForce(s).y, 0);
     }
 
-    /*
-    Calculate H
-     */
 
     public Vector3 frictionForce(State s) {
         float numeratorX = (-mu * g * s.getVx());
@@ -148,9 +133,6 @@ public abstract class Physics {
         return new Vector3(numeratorX / denominator, numeratorY / denominator, 0);
     }
 
-    /*
-    Calculate G
-     */
 
     public Vector3 gravityForce(State s) {
         Vector3 partials = partialDerivatives(s);
@@ -164,9 +146,6 @@ public abstract class Physics {
 
     }
 
-    /*
-    Partial Derivatives
-     */
 
     public Vector3 partialDerivatives(State s) {
         float x1 = s.getX() + EPSILON;

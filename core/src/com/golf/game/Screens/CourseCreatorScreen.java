@@ -50,17 +50,14 @@ public class CourseCreatorScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("skin/plain-james-ui.json"));
 
-        /*
-            Background
-         */
+
         batch = game.batch;
         sprite = new Sprite(new Texture(Gdx.files.internal("background.jpg")));
         sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //
 
         Label title = new Label("Course creator", skin);
-        title.setColor(Color.BLUE);
-        title.setPosition(WINDOW_WIDTH / 2 - title.getWidth() / 2, WINDOW_HEIGHT * 0.75f);
+        title.setColor(Color.BLACK);
+        title.setPosition(WINDOW_WIDTH / 2 - title.getWidth() / 2, WINDOW_HEIGHT * 0.8f);
 
         confirmButton = new TextButton("Confirm", skin);
         Vector2 buttonSize = new Vector2(200, 50);
@@ -94,18 +91,14 @@ public class CourseCreatorScreen implements Screen {
         errorLabel.setSize(200, 50);
         errorLabel.setPosition(300, buttonSize.y * 3 + 30);
 
-        /*
-            Important: To change color of font of a label/button/etc. you need to change it in assets in .json
-            file of a skin, where it is defined for a particular component.
-            You can also add your own colors in RGB format.
-         */
+
 
         table = new Table();
         table.setWidth(stage.getWidth());
         table.align(Align.center | Align.top);
         table.setPosition(0, Gdx.graphics.getHeight());
 
-        table.padTop(150);
+        table.padTop(350);
         table.add(heightLabel);
         table.add(heightText);
         table.row();
@@ -164,8 +157,6 @@ public class CourseCreatorScreen implements Screen {
         } catch (Exception e) {
             System.out.println("Error saving course... Going Back to Menu");
             System.out.println(e.toString());
-            System.out.println("Error saving course... Going Back to Menu");
-            System.out.println("Error saving course... Going Back to Menu");
             errorLabel.setText("You must input values in text fields");
             confirmButton.addListener(new ClickListener() {
 

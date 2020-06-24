@@ -17,9 +17,9 @@ import com.golf.game.Components.Colliders.CollisionManager;
 import com.golf.game.Components.Graphics.ArrowGraphicsComponent;
 import com.golf.game.GameLogic.GameManager;
 import com.golf.game.GameLogic.GraphicsManager;
-import com.golf.game.GameLogic.TerrainEditor;
 import com.golf.game.GameObjects.GUI;
 import com.golf.game.GameObjects.GameObject;
+import com.golf.game.GraphicsGenerator.TerrainEditor;
 import com.golf.game.GraphicsGenerator.TerrainGenerator;
 
 
@@ -41,17 +41,16 @@ public class Graphics extends InputAdapter implements Screen {
     private TerrainEditor terrainEditor;
     private InputMultiplexer inputMain;
     private CameraInputController camController;
-    private float speedCache;
     private boolean ballPressed = false;
     private GameObject shootArrow;
     private Vector3 dirShot;
     private boolean won = false;
 
-    public Graphics(GolfGame pGame, int pMode) {
-        this.game = pGame;
+    public Graphics(GolfGame theGame, int theMode) {
+        this.game = theGame;
         initCameras();
         initTerrain();
-        gameManager = new GameManager(pGame, pMode);
+        gameManager = new GameManager(theGame, theMode);
         terrainEditor.addObserver(gameManager);
         gui = new GUI(game, gameManager, hudViewport);
         terrainEditor.setGUI(gui);
@@ -69,7 +68,7 @@ public class Graphics extends InputAdapter implements Screen {
         dialogViewPort = new FitViewport(Width3DScreen, Height3DScreen, cam2D);
         fullScreenStage = new Stage(dialogViewPort, game.batch);
         cam3D = new PerspectiveCamera(90, Width3DScreen, Height2DScreen);
-        cam3D.position.add(new Vector3(0, 1300, 0));
+        cam3D.position.add(new Vector3(0, 1200, 0));
         cam3D.lookAt(0, 0, 0);
         cam3D.near = 1f;
         cam3D.far = 15000f;
@@ -115,63 +114,6 @@ public class Graphics extends InputAdapter implements Screen {
         return (stateSpline || changeBall || changeHole || addObject || eraseObject);
     }
 
-    /*
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-        if (MenuScreen.AI || checkGUIActive() || Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) return false;
-
-        dirShot = terrainEditor.getObject(screenX, screenY);
-        if (dirShot == null) return false;
-        speedCache = 0;
-        Vector3 pos = terrainEditor.getObject(screenX, screenY);
-        speedPressing = true;
-        Vector3 playerPos = gameManager.getPlayer().getPosition();
-        shootArrow = new GameObject((new Vector3(playerPos)));
-        int radius = 40;
-        pos.y = playerPos.z + radius;
-        ArrowGraphicsComponent g = new ArrowGraphicsComponent(new Vector3(playerPos), pos, Color.BLACK);
-        shootArrow.addGraphicComponent(g);
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (speedPressing && dirShot != null) {
-
-            shootArrow.destroy();
-            Vector3 playerPos = gameManager.getPlayer().getPosition();
-            swapYZ(dirShot);
-            Vector2 pos2 = new Vector2(playerPos.x, playerPos.y);
-            Vector2 dir2 = new Vector2(dirShot.x, dirShot.y);
-            float distance = dir2.dst(pos2);
-            float initialAngle = (float) Math.toDegrees(Math.acos(Math.abs(pos2.x - dir2.x) / distance));
-            float angle = 0;
-
-            if (pos2.x < dir2.x && pos2.y < dir2.y) {
-                angle = initialAngle;
-            } else if (pos2.x > dir2.x && pos2.y < dir2.y) {
-                angle = 180 - initialAngle;
-            } else if (pos2.x > dir2.x && pos2.y > dir2.y) {
-                angle = 180 + initialAngle;
-            } else if (pos2.x < dir2.x && pos2.y > dir2.y) {
-                angle = 360 - initialAngle;
-            }
-
-            float[][] input = new float[1][2];
-            input[0][0] = speedCache;
-            input[0][1] = angle;
-            gameManager.shootBallFromGameScreen3DInput(input);
-        }
-        speedPressing = false;
-        return false;
-
-    }
-
-
-
-*/
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
@@ -179,7 +121,6 @@ public class Graphics extends InputAdapter implements Screen {
 
         dirShot = terrainEditor.getObject(screenX, screenY);
         if (dirShot == null) return false;
-        speedCache = 0;
         Vector3 pos = terrainEditor.getObject(screenX, screenY);
         Vector3 playerPos = gameManager.getPlayer().getPosition();
         if (Math.abs(pos.x - playerPos.x) > 10 && Math.abs(pos.y - playerPos.z) > 10 && Math.abs(pos.z - playerPos.y) > 10)
@@ -204,7 +145,7 @@ public class Graphics extends InputAdapter implements Screen {
             Vector2 pos2 = new Vector2(playerPos.x, playerPos.y);
             Vector2 dir2 = new Vector2(dirShot.x, dirShot.y);
             float distance = dir2.dst(pos2);
-            float initialAngle = (float) Math.toDegrees(Math.acos(Math.abs(pos2.x - dir2.x) / distance));
+            float initialAngle = 180 + (float) Math.toDegrees(Math.acos(Math.abs(pos2.x - dir2.x) / distance));
             float angle = 0;
 
             if (pos2.x < dir2.x && pos2.y < dir2.y) {
@@ -217,12 +158,14 @@ public class Graphics extends InputAdapter implements Screen {
                 angle = 360 - initialAngle;
             }
 
-            float[][] input = new float[1][2];
 
-            input[0][0] = 10;
+            float[][] input = new float[1][2];
+            distance = gameManager.checkMaxSpeedConstrain(distance);
+            System.out.println(distance);
+            input[0][0] = distance;
             input[0][1] = angle;
 
-            gameManager.shootBallFromGameScreen3DInput(input);
+            gameManager.shootBallFromGameScreenInput(input);
         }
         ballPressed = false;
         return false;
@@ -233,13 +176,15 @@ public class Graphics extends InputAdapter implements Screen {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || !ballPressed) return false;
         shootArrow.destroy();
+
         Vector3 playerPos = gameManager.getPlayer().getPosition();
         Vector3 currentPos = terrainEditor.getObject(screenX, screenY);
+        shootArrow = new GameObject((new Vector3(playerPos)));
         ArrowGraphicsComponent g = new ArrowGraphicsComponent(new Vector3(playerPos), currentPos, Color.DARK_GRAY);
         shootArrow.addGraphicComponent(g);
-        System.out.println("reached");
         return false;
     }
+
 
     private void swapYZ(Vector3 v) {
         Vector3 cache = new Vector3(v);
@@ -260,9 +205,12 @@ public class Graphics extends InputAdapter implements Screen {
         }
 
         retrieveGUIState();
-        camController.update();
+
         gameManager.update(delta);
-        updateCamera();
+        if (!ballPressed) {
+            camController.update();
+            updateCamera();
+        }
 
         GraphicsManager.render3D(game.batch3D, cam3D);
         hudViewport.apply();
@@ -285,8 +233,9 @@ public class Graphics extends InputAdapter implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
-        cam3D.update();
+        if (!ballPressed) {
+            cam3D.update();
+        }
     }
 
     @Override

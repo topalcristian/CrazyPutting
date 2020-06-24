@@ -9,9 +9,6 @@ public class RK4 extends Physics {
         Physics.physics = this;
     }
 
-    /*
-    RK4
-     */
 
     public void updateComponents(PhysicsGameObject obj) {
         state.update(obj);
@@ -42,7 +39,7 @@ public class RK4 extends Physics {
         obj.setVelocityComponents(Vx, Vy);
     }
 
-    public Derivative derivative(/*PhysicsGameObject obj, float t,*/ double dt, State s, Derivative d) {
+    public Derivative derivative(double dt, State s, Derivative d) {
         State s_new = new State();
         s_new.setX((float) (s.getX() + d.getDx() * dt));
         s_new.setY((float) (s.getY() + d.getDy() * dt));
